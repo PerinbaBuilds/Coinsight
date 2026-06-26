@@ -1,11 +1,11 @@
-# 💰 Finance Tracker
+# Finance Tracker
 
 > A professional personal finance tracking app built with **Flutter & Supabase**.
 
 Take full control of your money. Finance Tracker lets you set monthly budgets per category, log expenses and income, monitor savings goals, track recurring bills, and view your financial health score — all in a clean, modern interface with full dark/light mode support.
 
-🌐 **Live App:** [finance-traking-app.netlify.app](https://finance-traking-app.netlify.app)
-Unfortunately, netlify credits got over. So latest and after changes deployed in github.io.pages
+**Live App:** [finance-traking-app.netlify.app](https://finance-traking-app.netlify.app)
+| Unfortunately, netlify credits got over. So latest and after changes deployed in github.io.pages| 
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat&logo=dart&logoColor=white)
@@ -18,14 +18,14 @@ Unfortunately, netlify credits got over. So latest and after changes deployed in
 
 | Feature | Description |
 |---|---|
-| 📊 **Budget Tracking** | Set monthly budgets per category, visualize actual vs planned spending |
-| 💸 **Expense Management** | Add, view, and delete expenses with category breakdown |
-| 💵 **Income Tracking** | Log multiple income sources and monitor net savings |
-| 🎯 **Savings Goals** | Create goals with target amounts and track progress |
-| 📅 **Monthly History** | Snapshots of past months with carry-forward balances |
-| 🔁 **Recurring Expenses** | Track and manage bills that repeat monthly |
-| 📈 **Financial Insights** | Health score, spending forecast, and smart alerts |
-| 🌙 **Dark / Light Mode** | Full theme support across all screens |
+| **Budget Tracking** | Set monthly budgets per category, visualize actual vs planned spending |
+| **Expense Management** | Add, view, and delete expenses with category breakdown |
+| **Income Tracking** | Log multiple income sources and monitor net savings |
+| **Savings Goals** | Create goals with target amounts and track progress |
+| **Monthly History** | Snapshots of past months with carry-forward balances |
+| **Recurring Expenses** | Track and manage bills that repeat monthly |
+| **Financial Insights** | Health score, spending forecast, and smart alerts |
+| **Dark / Light Mode** | Full theme support across all screens |
 
 ---
 
