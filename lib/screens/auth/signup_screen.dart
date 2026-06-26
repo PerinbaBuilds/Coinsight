@@ -132,57 +132,80 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 40),
 
-                // ── Full name ────────────────────────────────────────────────
-                _AuthField(
-                  controller: _nameCtrl,
-                  label: 'Full name',
-                  icon: Icons.person_outline_rounded,
-                  validator: (v) =>
-                      v == null || v.trim().isEmpty ? 'Enter your name' : null,
-                ),
-                const SizedBox(height: 14),
+                // Without an explicit AutofillGroup + autofillHints, Flutter web's
+                // hidden autofill <form> isn't owned by the engine, so the browser
+                // can submit it natively on Enter/autofill — causing a full page
+                // reload back to index.html before our onPressed ever runs.
+                AutofillGroup(
+                  onDisposeAction: AutofillContextAction.commit,
+                  child: Column(
+                    children: [
+                      // ── Full name ────────────────────────────────────────────
+                      _AuthField(
+                        controller: _nameCtrl,
+                        label: 'Full name',
+                        icon: Icons.person_outline_rounded,
+                        autofillHints: const [AutofillHints.name],
+                        textInputAction: TextInputAction.next,
+                        validator: (v) => v == null || v.trim().isEmpty
+                            ? 'Enter your name'
+                            : null,
+                      ),
+                      const SizedBox(height: 14),
 
-                // ── Email ────────────────────────────────────────────────────
-                _AuthField(
-                  controller: _emailCtrl,
-                  label: 'Email address',
-                  icon: Icons.mail_outline_rounded,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (v) => v == null || !v.contains('@')
-                      ? 'Enter a valid email'
-                      : null,
-                ),
-                const SizedBox(height: 14),
+                      // ── Email ────────────────────────────────────────────────
+                      _AuthField(
+                        controller: _emailCtrl,
+                        label: 'Email address',
+                        icon: Icons.mail_outline_rounded,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        textInputAction: TextInputAction.next,
+                        validator: (v) => v == null || !v.contains('@')
+                            ? 'Enter a valid email'
+                            : null,
+                      ),
+                      const SizedBox(height: 14),
 
-                // ── Password ─────────────────────────────────────────────────
-                _AuthField(
-                  controller: _passwordCtrl,
-                  label: 'Password',
-                  icon: Icons.lock_outline_rounded,
-                  obscureText: _obscure,
-                  suffixIcon: GestureDetector(
-                    onTap: () => setState(() => _obscure = !_obscure),
-                    child: Icon(
-                      _obscure
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: scheme.onSurface.withValues(alpha: 0.6),
-                      size: 20,
-                    ),
+                      // ── Password ─────────────────────────────────────────────
+                      _AuthField(
+                        controller: _passwordCtrl,
+                        label: 'Password',
+                        icon: Icons.lock_outline_rounded,
+                        obscureText: _obscure,
+                        autofillHints: const [AutofillHints.newPassword],
+                        textInputAction: TextInputAction.next,
+                        suffixIcon: GestureDetector(
+                          onTap: () => setState(() => _obscure = !_obscure),
+                          child: Icon(
+                            _obscure
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: scheme.onSurface.withValues(alpha: 0.6),
+                            size: 20,
+                          ),
+                        ),
+                        validator: (v) => v == null || v.length < 6
+                            ? 'Min 6 characters'
+                            : null,
+                      ),
+                      const SizedBox(height: 14),
+
+                      // ── Confirm password ─────────────────────────────────────
+                      _AuthField(
+                        controller: _confirmCtrl,
+                        label: 'Confirm password',
+                        icon: Icons.lock_outline_rounded,
+                        obscureText: _obscure,
+                        autofillHints: const [AutofillHints.newPassword],
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _signUp(),
+                        validator: (v) => v != _passwordCtrl.text
+                            ? 'Passwords do not match'
+                            : null,
+                      ),
+                    ],
                   ),
-                  validator: (v) =>
-                      v == null || v.length < 6 ? 'Min 6 characters' : null,
-                ),
-                const SizedBox(height: 14),
-
-                // ── Confirm password ─────────────────────────────────────────
-                _AuthField(
-                  controller: _confirmCtrl,
-                  label: 'Confirm password',
-                  icon: Icons.lock_outline_rounded,
-                  obscureText: _obscure,
-                  validator: (v) =>
-                      v != _passwordCtrl.text ? 'Passwords do not match' : null,
                 ),
                 const SizedBox(height: 28),
 
@@ -285,6 +308,9 @@ class _AuthField extends StatelessWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
+  final Iterable<String>? autofillHints;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
 
   const _AuthField({
     required this.controller,
@@ -294,6 +320,9 @@ class _AuthField extends StatelessWidget {
     this.obscureText = false,
     this.suffixIcon,
     this.validator,
+    this.autofillHints,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -305,6 +334,9 @@ class _AuthField extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      autofillHints: autofillHints,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
       style: TextStyle(color: scheme.onSurface, fontSize: 15),
       decoration: InputDecoration(
         labelText: label,
