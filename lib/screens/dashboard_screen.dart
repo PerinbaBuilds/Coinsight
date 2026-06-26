@@ -394,10 +394,8 @@ class _DashboardHeader extends StatelessWidget {
                       isOver
                           ? '-$sym${remaining.abs().toStringAsFixed(0)} over'
                           : '$sym${remaining.toStringAsFixed(0)} left',
-                      style: TextStyle(
-                        color: isOver
-                            ? Colors.red.shade200
-                            : Colors.green.shade200,
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
@@ -470,7 +468,7 @@ class _DashboardHeader extends StatelessWidget {
                       label: 'Budget',
                       amount: finance.totalMonthlyBudget,
                       icon: Icons.account_balance_wallet,
-                      color: Colors.blue.shade200,
+                      color: const Color(0xFF60A5FA),
                       currencySymbol: sym,
                     ),
                   ),
@@ -481,8 +479,8 @@ class _DashboardHeader extends StatelessWidget {
                       amount: finance.totalActualSpent,
                       icon: Icons.payment,
                       color: isOver
-                          ? Colors.red.shade200
-                          : Colors.green.shade200,
+                          ? const Color(0xFFF87171)
+                          : const Color(0xFF4ADE80),
                       currencySymbol: sym,
                     ),
                   ),
@@ -496,7 +494,7 @@ class _DashboardHeader extends StatelessWidget {
                       label: 'Income',
                       amount: finance.totalIncome,
                       icon: Icons.trending_up,
-                      color: Colors.teal.shade200,
+                      color: const Color(0xFF2DD4BF),
                       currencySymbol: sym,
                     ),
                   ),
@@ -507,8 +505,8 @@ class _DashboardHeader extends StatelessWidget {
                       amount: finance.netSavings,
                       icon: Icons.savings,
                       color: finance.netSavings >= 0
-                          ? Colors.green.shade200
-                          : Colors.red.shade200,
+                          ? const Color(0xFF4ADE80)
+                          : const Color(0xFFF87171),
                       currencySymbol: sym,
                     ),
                   ),

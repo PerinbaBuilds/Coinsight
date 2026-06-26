@@ -58,7 +58,7 @@ class _SummaryCardState extends State<SummaryCard> {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: widget.color.withValues(alpha: 0.2),
+                      color: widget.color.withValues(alpha: 0.28),
                       borderRadius: BorderRadius.circular(AppTheme.radiusSm),
                     ),
                     child: Icon(widget.icon, color: widget.color, size: 16),
@@ -87,8 +87,8 @@ class _SummaryCardState extends State<SummaryCard> {
                       : '${widget.currencySymbol}${absVal.toStringAsFixed(0)}';
                   return Text(
                     display,
-                    style: TextStyle(
-                      color: widget.color,
+                    style: const TextStyle(
+                      color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
