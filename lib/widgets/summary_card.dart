@@ -42,9 +42,9 @@ class _SummaryCardState extends State<SummaryCard> {
         child: Container(
           padding: const EdgeInsets.all(AppTheme.space16),
           decoration: BoxDecoration(
-            color: AppTheme.glassSurface(Colors.white, alpha: 0.12),
+            color: widget.color.withValues(alpha: 0.16),
             borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+            border: Border.all(color: widget.color.withValues(alpha: 0.35)),
             boxShadow: widget.isHighlighted
                 ? AppTheme.ambientGlow(widget.color)
                 : null,
