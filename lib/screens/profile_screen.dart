@@ -522,6 +522,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   .animate()
                   .fadeIn(delay: 420.ms, duration: 350.ms),
 
+              const SizedBox(height: 24),
+
+              Center(
+                child: Text(
+                  '© ${DateTime.now().year} Finance Tracker. All rights reserved.',
+                  style: TextStyle(
+                    color: colorScheme.onSurface.withValues(alpha: 0.4),
+                    fontSize: 12,
+                  ),
+                ),
+              ).animate().fadeIn(delay: 460.ms, duration: 350.ms),
+
               const SizedBox(height: 40),
             ]),
           ),
