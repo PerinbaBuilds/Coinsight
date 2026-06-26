@@ -3,16 +3,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService extends ChangeNotifier {
   final _supabase = Supabase.instance.client;
+  User? _user;
 
-  User? get currentUser => _supabase.auth.currentUser;
-  bool get isLoggedIn => currentUser != null;
-  String? get userId => currentUser?.id;
-  String? get userEmail => currentUser?.email;
+  User? get currentUser => _user;
+  bool get isLoggedIn => _user != null;
+  String? get userId => _user?.id;
+  String? get userEmail => _user?.email;
   String get displayName =>
-      currentUser?.userMetadata?['full_name'] ?? userEmail ?? 'User';
+      _user?.userMetadata?['full_name'] ?? userEmail ?? 'User';
 
   AuthService() {
+    _user = _supabase.auth.currentUser;
     _supabase.auth.onAuthStateChange.listen((data) {
+      _user = data.session?.user;
       notifyListeners();
     });
   }
@@ -22,11 +25,19 @@ class AuthService extends ChangeNotifier {
     required String password,
     String? fullName,
   }) async {
-    return _supabase.auth.signUp(
+    final response = await _supabase.auth.signUp(
       email: email,
       password: password,
       data: fullName != null ? {'full_name': fullName} : null,
     );
+    // The SDK's currentUser/currentSession getters can lag behind the
+    // returned response on web, so set state from the response directly
+    // instead of waiting on onAuthStateChange to flip isLoggedIn.
+    if (response.user != null) {
+      _user = response.user;
+      notifyListeners();
+    }
+    return response;
   }
 
   Future<AuthResponse> signIn({
@@ -37,14 +48,14 @@ class AuthService extends ChangeNotifier {
       email: email,
       password: password,
     );
-    // onAuthStateChange doesn't always fire promptly on web right after
-    // signInWithPassword resolves, so notify explicitly to flip isLoggedIn.
+    _user = response.user;
     notifyListeners();
     return response;
   }
 
   Future<void> signOut() async {
     await _supabase.auth.signOut();
+    _user = null;
     notifyListeners();
   }
 
@@ -63,9 +74,10 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> updateProfile({String? fullName}) async {
-    await _supabase.auth.updateUser(
+    final response = await _supabase.auth.updateUser(
       UserAttributes(data: {'full_name': fullName}),
     );
+    if (response.user != null) _user = response.user;
     notifyListeners();
   }
 }

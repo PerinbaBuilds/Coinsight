@@ -420,14 +420,21 @@ class _DashboardHeader extends StatelessWidget {
                       Container(
                         height: 10,
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.18),
+                          color: Colors.black.withValues(alpha: 0.38),
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
                             color: isOver
                                 ? AppTheme.rose.withValues(alpha: 0.6)
-                                : Colors.white.withValues(alpha: 0.3),
-                            width: isOver ? 1.5 : 1,
+                                : Colors.white.withValues(alpha: 0.55),
+                            width: isOver ? 1.5 : 1.2,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.15),
+                              blurRadius: 4,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
                         ),
                         child: Stack(
                           children: [
@@ -510,7 +517,7 @@ class _DashboardHeader extends StatelessWidget {
                       label: 'Budget',
                       amount: finance.totalMonthlyBudget,
                       icon: Icons.account_balance_wallet,
-                      color: const Color(0xFF60A5FA),
+                      color: const Color(0xFF15803D),
                       currencySymbol: sym,
                     ),
                   ),
