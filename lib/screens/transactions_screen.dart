@@ -355,7 +355,7 @@ class _DateGroupHeader extends StatelessWidget {
 }
 
 // ── Filter Chip ───────────────────────────────────────────────────────────────
-class _FilterChip extends StatelessWidget {
+class _FilterChip extends StatefulWidget {
   final String label;
   final bool selected;
   final Color color;
@@ -369,33 +369,67 @@ class _FilterChip extends StatelessWidget {
   });
 
   @override
+  State<_FilterChip> createState() => _FilterChipState();
+}
+
+class _FilterChipState extends State<_FilterChip> {
+  bool _hovering = false;
+
+  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: AppTheme.motionFast,
-        curve: AppTheme.motionCurve,
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: selected ? color : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-              color: selected
-                  ? color
-                  : colorScheme.outline.withValues(alpha: isDark ? 1.0 : 0.5)),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: selected
-                ? Colors.white
-                : colorScheme.onSurface.withValues(alpha: 0.6),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          duration: AppTheme.motionFast,
+          curve: AppTheme.motionCurve,
+          scale: _hovering && !widget.selected ? 1.06 : 1.0,
+          child: AnimatedContainer(
+            duration: AppTheme.motionFast,
+            curve: AppTheme.motionCurve,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: widget.selected
+                  ? widget.color
+                  : _hovering
+                      ? widget.color.withValues(alpha: 0.1)
+                      : Colors.transparent,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                  color: widget.selected
+                      ? widget.color
+                      : _hovering
+                          ? widget.color.withValues(alpha: 0.6)
+                          : colorScheme.outline
+                              .withValues(alpha: isDark ? 1.0 : 0.5)),
+              boxShadow: _hovering && !widget.selected
+                  ? [
+                      BoxShadow(
+                        color: widget.color.withValues(alpha: 0.25),
+                        blurRadius: 8,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: widget.selected
+                    ? Colors.white
+                    : _hovering
+                        ? widget.color
+                        : colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
           ),
         ),
       ),

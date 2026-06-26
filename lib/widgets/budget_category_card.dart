@@ -38,10 +38,11 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
 
     return Container(
       decoration: BoxDecoration(
-        color: scheme.surface,
+        color: Color.alphaBlend(
+            cat.color.withValues(alpha: isDark ? 0.08 : 0.05), scheme.surface),
         borderRadius: BorderRadius.circular(AppTheme.radiusMd),
         border: Border.all(
-          color: scheme.outline.withValues(alpha: isDark ? 1.0 : 0.5),
+          color: cat.color.withValues(alpha: isDark ? 0.5 : 0.35),
         ),
         boxShadow: [
           BoxShadow(
@@ -56,14 +57,14 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Colored left accent strip
+            // Category-colored left accent strip (identifies the category at a glance)
             Container(
               width: 4,
               decoration: BoxDecoration(
-                color: statusColor,
+                color: cat.color,
                 boxShadow: [
                   BoxShadow(
-                    color: statusColor.withValues(alpha: 0.5),
+                    color: cat.color.withValues(alpha: 0.5),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -84,7 +85,7 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
                           CircleAvatar(
                             radius: 20,
                             backgroundColor:
-                                cat.color.withValues(alpha: 0.12),
+                                cat.color.withValues(alpha: 0.2),
                             child: Icon(cat.icon, color: cat.color, size: 20),
                           ),
                           const SizedBox(width: 12),
