@@ -1,11 +1,11 @@
 {
-    "name": "finance_tracker",
-    "short_name": "finance_tracker",
+    "name": "Finance Tracker",
+    "short_name": "Finance Tracker",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#050E09",
+    "theme_color": "#22C55E",
+    "description": "Track spending, manage budgets, and hit your savings goals.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
