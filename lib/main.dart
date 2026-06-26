@@ -52,6 +52,8 @@ class FinanceTrackerApp extends StatelessWidget {
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: finance.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        themeAnimationDuration: AppTheme.motionMedium,
+        themeAnimationCurve: AppTheme.motionCurve,
         home: _AuthGate(isPasswordRecovery: isPasswordRecovery),
       ),
     );
