@@ -39,7 +39,7 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
     return Container(
       decoration: BoxDecoration(
         color: scheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
         border: Border.all(
           color: scheme.outline.withValues(alpha: isDark ? 1.0 : 0.4),
         ),
@@ -199,8 +199,8 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
                   ),
                   // Animated expand section
                   AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutCubic,
+                    duration: AppTheme.motionMedium,
+                    curve: AppTheme.motionCurve,
                     child: _expanded
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -345,8 +345,8 @@ class _RingProgress extends StatelessWidget {
     final clamped = percent.clamp(0.0, 999.0);
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: (clamped / 100).clamp(0.0, 1.0)),
-      duration: const Duration(milliseconds: 900),
-      curve: Curves.easeOutCubic,
+      duration: AppTheme.motionSlow * 2,
+      curve: AppTheme.motionCurve,
       builder: (_, v, __) => SizedBox(
         width: 52,
         height: 52,

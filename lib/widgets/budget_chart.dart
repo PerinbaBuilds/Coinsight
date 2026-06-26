@@ -39,7 +39,7 @@ class _BudgetChartState extends State<BudgetChart> {
     return Container(
       decoration: BoxDecoration(
         color: scheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppTheme.radiusLg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.06),
@@ -55,7 +55,7 @@ class _BudgetChartState extends State<BudgetChart> {
         ],
         border: Border.all(color: scheme.outline.withValues(alpha: isDark ? 1.0 : 0.4)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: const EdgeInsets.all(AppTheme.space20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -295,7 +295,8 @@ class _BudgetChartState extends State<BudgetChart> {
         return GestureDetector(
           onTap: () => setState(() => _touched = isTouched ? -1 : i),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
+            duration: AppTheme.motionFast,
+            curve: AppTheme.motionCurve,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: isTouched
