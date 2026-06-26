@@ -145,6 +145,7 @@ class _AuthGateState extends State<_AuthGate> {
     }
 
     final auth = context.watch<AuthService>();
+    debugPrint('[authgate] build, isLoggedIn=${auth.isLoggedIn}');
     return auth.isLoggedIn ? const HomeScreen() : const LoginScreen();
   }
 }
