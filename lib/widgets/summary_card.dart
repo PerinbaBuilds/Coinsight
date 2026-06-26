@@ -42,12 +42,18 @@ class _SummaryCardState extends State<SummaryCard> {
         child: Container(
           padding: const EdgeInsets.all(AppTheme.space16),
           decoration: BoxDecoration(
-            color: widget.color.withValues(alpha: 0.16),
+            color: Color.alphaBlend(
+                widget.color.withValues(alpha: 0.55), Colors.black54),
             borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-            border: Border.all(color: widget.color.withValues(alpha: 0.35)),
-            boxShadow: widget.isHighlighted
-                ? AppTheme.ambientGlow(widget.color)
-                : null,
+            border: Border.all(
+                color: widget.color.withValues(alpha: 0.8), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: widget.color.withValues(alpha: widget.isHighlighted ? 0.55 : 0.3),
+                blurRadius: widget.isHighlighted ? 16 : 10,
+                spreadRadius: widget.isHighlighted ? 1 : 0,
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,10 +64,10 @@ class _SummaryCardState extends State<SummaryCard> {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: widget.color.withValues(alpha: 0.28),
+                      color: widget.color.withValues(alpha: 0.55),
                       borderRadius: BorderRadius.circular(AppTheme.radiusSm),
                     ),
-                    child: Icon(widget.icon, color: widget.color, size: 16),
+                    child: Icon(widget.icon, color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: AppTheme.space8),
                   Expanded(

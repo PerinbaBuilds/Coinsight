@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../services/auth_service.dart';
+import '../../services/finance_service.dart';
 import '../../theme/app_theme.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
@@ -32,12 +33,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
+      final finance = context.read<FinanceService>();
       await context.read<AuthService>().signIn(
             email: _emailCtrl.text.trim(),
             password: _passwordCtrl.text,
           );
-      // Data loading is handled by _AuthGate's signedIn listener.
-      // Do not await loadData here — this widget may be unmounted before it returns.
+      // Trigger the data load directly instead of relying solely on
+      // _AuthGate's auth-state listener, which can lag on web.
+      await finance.loadData();
     } on AuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -259,6 +262,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 32),
+
+                Center(
+                  child: Text(
+                    '© ${DateTime.now().year} Finance Tracker. All rights reserved.',
+                    style: TextStyle(
+                      color: scheme.onSurface.withValues(alpha: 0.4),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
               ],
             ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.04, duration: 350.ms),
           ),

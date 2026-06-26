@@ -33,10 +33,14 @@ class AuthService extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
-    return _supabase.auth.signInWithPassword(
+    final response = await _supabase.auth.signInWithPassword(
       email: email,
       password: password,
     );
+    // onAuthStateChange doesn't always fire promptly on web right after
+    // signInWithPassword resolves, so notify explicitly to flip isLoggedIn.
+    notifyListeners();
+    return response;
   }
 
   Future<void> signOut() async {
