@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 
@@ -76,9 +77,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(height: 36),
 
               AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
+                duration: AppTheme.motionSlow,
+                switchInCurve: AppTheme.motionCurve,
+                switchOutCurve: AppTheme.motionCurve,
                 child: _sent ? _successBody() : _formBody(),
-              ),
+              ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.04, duration: 350.ms),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../theme/app_theme.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -204,7 +205,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
               const SizedBox(height: 32),
             ],
-          ),
+          ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.04, duration: 350.ms),
         ),
       ),
     );

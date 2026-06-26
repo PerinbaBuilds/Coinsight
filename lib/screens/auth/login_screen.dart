@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 import 'signup_screen.dart';
@@ -250,7 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 32),
               ],
-            ),
+            ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.04, duration: 350.ms),
           ),
         ),
       ),
