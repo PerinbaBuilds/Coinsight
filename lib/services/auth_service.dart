@@ -23,7 +23,15 @@ class AuthService extends ChangeNotifier {
       // clear _user; every other event should only update it when a real
       // user is present.
       if (data.event == AuthChangeEvent.signedOut) {
-        _user = null;
+        // A signOut() call's broadcast event is asynchronous and can arrive
+        // *after* a fast subsequent sign-in's own event, due to stream
+        // ordering races. Blindly clearing _user here would wipe out a
+        // brand-new session and bounce the user back to the login screen.
+        // Only actually clear it if there's genuinely no active session by
+        // the time this event is processed.
+        if (_supabase.auth.currentSession == null) {
+          _user = null;
+        }
       } else if (data.session?.user != null) {
         _user = data.session!.user;
       }
