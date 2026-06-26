@@ -34,71 +34,81 @@ class IncomeScreen extends StatelessWidget {
           ),
           body: Column(
             children: [
-              Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: Theme.of(context).brightness == Brightness.dark
-                        ? const [AppTheme.navyDark, AppTheme.navy, AppTheme.navyLight]
-                        : const [Color(0xFF22C55E), Color(0xFF4ADE80), Color(0xFF86EFAC)],
+              Builder(builder: (context) {
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+                final scheme = Theme.of(context).colorScheme;
+                return Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: scheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: scheme.outline.withValues(alpha: isDark ? 1.0 : 0.5)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: AppTheme.cardShadow,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Total Income',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Total Income',
+                              style: TextStyle(
+                                  color: scheme.onSurface.withValues(alpha: 0.6),
+                                  fontSize: 14)),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today,
+                                  color: scheme.onSurface.withValues(alpha: 0.4),
+                                  size: 12),
+                              const SizedBox(width: 4),
+                              Text(
+                                DateFormat('MMMM yyyy')
+                                    .format(DateTime.now()),
+                                style: TextStyle(
+                                    color: scheme.onSurface.withValues(alpha: 0.4),
+                                    fontSize: 12),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${finance.incomes.length} source${finance.incomes.length == 1 ? '' : 's'}',
                             style: TextStyle(
-                                color: Colors.white70, fontSize: 14)),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(Icons.calendar_today,
-                                color: Colors.white54, size: 12),
-                            const SizedBox(width: 4),
-                            Text(
-                              DateFormat('MMMM yyyy')
-                                  .format(DateTime.now()),
-                              style: const TextStyle(
-                                  color: Colors.white54, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${finance.incomes.length} source${finance.incomes.length == 1 ? '' : 's'}',
+                                color: scheme.onSurface.withValues(alpha: 0.4),
+                                fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0, end: finance.totalIncome),
+                        duration: const Duration(milliseconds: 1000),
+                        curve: AppTheme.motionCurve,
+                        builder: (_, val, __) => Text(
+                          '${finance.currencySymbol}${val.toStringAsFixed(0)}',
                           style: const TextStyle(
-                              color: Colors.white60, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0, end: finance.totalIncome),
-                      duration: const Duration(milliseconds: 1000),
-                      curve: AppTheme.motionCurve,
-                      builder: (_, val, __) => Text(
-                        '${finance.currencySymbol}${val.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -1,
+                            color: AppTheme.emerald,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -1,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-                  .animate()
-                  .fadeIn(duration: 400.ms)
-                  .slideY(begin: -0.1),
+                    ],
+                  ),
+                )
+                    .animate()
+                    .fadeIn(duration: 400.ms)
+                    .slideY(begin: -0.1);
+              }),
 
               // List
               Expanded(
