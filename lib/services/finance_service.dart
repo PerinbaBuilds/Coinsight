@@ -220,14 +220,14 @@ class FinanceService extends ChangeNotifier {
 
   void _initDefaultCategories() {
     _categories = [
-      BudgetCategory(id: _uuid.v4(), name: 'Housing', budgetAmount: 1500, icon: Icons.home, color: Colors.blue),
-      BudgetCategory(id: _uuid.v4(), name: 'Food & Dining', budgetAmount: 600, icon: Icons.restaurant, color: Colors.orange),
-      BudgetCategory(id: _uuid.v4(), name: 'Transportation', budgetAmount: 400, icon: Icons.directions_car, color: Colors.green),
-      BudgetCategory(id: _uuid.v4(), name: 'Healthcare', budgetAmount: 300, icon: Icons.health_and_safety, color: Colors.red),
-      BudgetCategory(id: _uuid.v4(), name: 'Entertainment', budgetAmount: 200, icon: Icons.movie, color: Colors.purple),
-      BudgetCategory(id: _uuid.v4(), name: 'Shopping', budgetAmount: 300, icon: Icons.shopping_bag, color: Colors.pink),
-      BudgetCategory(id: _uuid.v4(), name: 'Utilities', budgetAmount: 250, icon: Icons.bolt, color: Colors.amber),
-      BudgetCategory(id: _uuid.v4(), name: 'Savings', budgetAmount: 450, icon: Icons.savings, color: Colors.teal),
+      BudgetCategory(id: _uuid.v4(), name: 'Housing', budgetAmount: 1500, icon: Icons.home, color: const Color(0xFF0EA5E9)),
+      BudgetCategory(id: _uuid.v4(), name: 'Food & Dining', budgetAmount: 600, icon: Icons.restaurant, color: const Color(0xFFF97316)),
+      BudgetCategory(id: _uuid.v4(), name: 'Transportation', budgetAmount: 400, icon: Icons.directions_car, color: const Color(0xFF06B6D4)),
+      BudgetCategory(id: _uuid.v4(), name: 'Healthcare', budgetAmount: 300, icon: Icons.health_and_safety, color: const Color(0xFFEF4444)),
+      BudgetCategory(id: _uuid.v4(), name: 'Entertainment', budgetAmount: 200, icon: Icons.movie, color: const Color(0xFF8B5CF6)),
+      BudgetCategory(id: _uuid.v4(), name: 'Shopping', budgetAmount: 300, icon: Icons.shopping_bag, color: const Color(0xFFEC4899)),
+      BudgetCategory(id: _uuid.v4(), name: 'Utilities', budgetAmount: 250, icon: Icons.bolt, color: const Color(0xFFF59E0B)),
+      BudgetCategory(id: _uuid.v4(), name: 'Savings', budgetAmount: 450, icon: Icons.savings, color: const Color(0xFF14B8A6)),
     ];
   }
 
