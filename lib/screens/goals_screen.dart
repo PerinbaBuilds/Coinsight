@@ -41,7 +41,7 @@ class GoalsScreen extends StatelessWidget {
                           begin: 0.25,
                           delay: Duration(milliseconds: 100 + index * 80),
                           duration: 350.ms,
-                          curve: Curves.easeOutCubic,
+                          curve: AppTheme.motionCurve,
                         );
                   },
                 ),
@@ -211,7 +211,7 @@ class _GoalCard extends StatelessWidget {
           TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: progress),
             duration: const Duration(milliseconds: 800),
-            curve: Curves.easeOutCubic,
+            curve: AppTheme.motionCurve,
             builder: (_, v, __) => ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: LinearProgressIndicator(

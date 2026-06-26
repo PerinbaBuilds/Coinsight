@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../services/finance_service.dart';
 import '../models/transaction.dart';
 import '../theme/app_theme.dart';
@@ -84,7 +85,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               // Search bar (collapsible)
               AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOutCubic,
+                curve: AppTheme.motionCurve,
                 height: _searchExpanded ? 64 : 0,
                 color: colorScheme.surface,
                 child: _searchExpanded
@@ -178,7 +179,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 cat?.color ?? colorScheme.onSurface.withValues(alpha: 0.4),
                             onDelete: () =>
                                 _handleDelete(context, finance, tx),
-                          );
+                          )
+                              .animate()
+                              .fadeIn(
+                                  duration: 250.ms,
+                                  delay: (i * 20).ms)
+                              .slideX(begin: 0.03, duration: 250.ms);
                         },
                       ),
               ),
@@ -291,7 +297,8 @@ class _FilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: AppTheme.motionFast,
+        curve: AppTheme.motionCurve,
         padding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(

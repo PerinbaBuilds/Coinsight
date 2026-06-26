@@ -82,7 +82,7 @@ class IncomeScreen extends StatelessWidget {
                     TweenAnimationBuilder<double>(
                       tween: Tween(begin: 0, end: finance.totalIncome),
                       duration: const Duration(milliseconds: 1000),
-                      curve: Curves.easeOutCubic,
+                      curve: AppTheme.motionCurve,
                       builder: (_, val, __) => Text(
                         '${finance.currencySymbol}${val.toStringAsFixed(0)}',
                         style: const TextStyle(

@@ -254,7 +254,7 @@ class _HealthScoreCard extends StatelessWidget {
           TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: score / 100),
             duration: const Duration(milliseconds: 1200),
-            curve: Curves.easeOutCubic,
+            curve: AppTheme.motionCurve,
             builder: (_, v, __) => SizedBox(
               width: 100,
               height: 100,

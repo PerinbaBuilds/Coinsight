@@ -63,11 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       extendBody: true,
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 220),
+        duration: AppTheme.motionMedium,
         transitionBuilder: (child, animation) {
           final curved = CurvedAnimation(
             parent: animation,
-            curve: Curves.easeOutCubic,
+            curve: AppTheme.motionCurve,
           );
           return FadeTransition(
             opacity: curved,
@@ -145,7 +145,7 @@ class _FloatingNavBar extends StatelessWidget {
                   end: Alignment.bottomRight,
                   colors: [Color(0xFFECFDF5), Color(0xFFF8FFFE)],
                 ),
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(AppTheme.radiusXl + 4),
           border: Border.all(
             color: Theme.of(context).brightness == Brightness.dark
                 ? const Color(0xFF2D5A3D)
@@ -163,8 +163,8 @@ class _FloatingNavBar extends StatelessWidget {
               onTap: () => onItemSelected(i),
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOutCubic,
+                duration: AppTheme.motionMedium,
+                curve: AppTheme.motionCurve,
                 padding: selected
                     ? const EdgeInsets.symmetric(horizontal: 14, vertical: 10)
                     : const EdgeInsets.symmetric(horizontal: 14, vertical: 10),

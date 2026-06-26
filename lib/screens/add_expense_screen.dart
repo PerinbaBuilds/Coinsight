@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../models/transaction.dart';
 import '../services/finance_service.dart';
 
@@ -202,7 +203,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               ),
             ],
           ),
-        ),
+        ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.04, duration: 300.ms),
       ),
     );
   }

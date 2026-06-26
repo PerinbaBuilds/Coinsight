@@ -135,7 +135,7 @@ class DashboardScreen extends StatelessWidget {
                           begin: 0.3,
                           delay: Duration(milliseconds: 400 + index * 80),
                           duration: 350.ms,
-                          curve: Curves.easeOutCubic,
+                          curve: AppTheme.motionCurve,
                         );
                   },
                   childCount: finance.categories.length,
@@ -354,7 +354,7 @@ class _DashboardHeader extends StatelessWidget {
                     tween: Tween(
                         begin: 0, end: finance.totalActualSpent),
                     duration: const Duration(milliseconds: 1200),
-                    curve: Curves.easeOutCubic,
+                    curve: AppTheme.motionCurve,
                     builder: (_, val, __) => Text(
                       '$sym${val.toStringAsFixed(0)}',
                       style: const TextStyle(
@@ -411,7 +411,7 @@ class _DashboardHeader extends StatelessWidget {
               TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0, end: percent),
                 duration: const Duration(milliseconds: 900),
-                curve: Curves.easeOutCubic,
+                curve: AppTheme.motionCurve,
                 builder: (_, v, __) {
                   final barColor = isOver
                       ? AppTheme.rose

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../models/category.dart';
 import '../services/finance_service.dart';
 import '../theme/app_theme.dart';
@@ -57,7 +58,10 @@ class ManageBudgetsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              _TotalBudgetCard(finance: finance),
+              _TotalBudgetCard(finance: finance)
+                  .animate()
+                  .fadeIn(duration: 300.ms)
+                  .slideY(begin: 0.05, duration: 300.ms),
               const SizedBox(height: 16),
               Text('Categories',
                   style: TextStyle(
@@ -65,14 +69,19 @@ class ManageBudgetsScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface)),
               const SizedBox(height: 8),
-              ...finance.categories.map((cat) => _CategoryTile(
-                    category: cat,
-                    isLocked: finance.isBudgetLocked,
-                    onEdit: () =>
-                        _showCategoryDialog(context, finance, category: cat),
-                    onDelete: () =>
-                        _confirmDelete(context, finance, cat),
-                  )),
+              ...finance.categories.indexed.map((entry) {
+                final (i, cat) = entry;
+                return _CategoryTile(
+                  category: cat,
+                  isLocked: finance.isBudgetLocked,
+                  onEdit: () =>
+                      _showCategoryDialog(context, finance, category: cat),
+                  onDelete: () => _confirmDelete(context, finance, cat),
+                )
+                    .animate()
+                    .fadeIn(duration: 250.ms, delay: (i * 30).ms)
+                    .slideX(begin: 0.03, duration: 250.ms);
+              }),
             ],
           ),
           floatingActionButton: finance.isBudgetLocked
