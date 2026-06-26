@@ -420,8 +420,10 @@ class _DashboardHeader extends StatelessWidget {
                       Container(
                         height: 10,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
+                          color: Colors.black.withValues(alpha: 0.18),
                           borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.3)),
                         ),
                         child: Stack(
                           children: [
