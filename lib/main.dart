@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'config/supabase_config.dart';
+import 'services/advisor_service.dart';
 import 'services/auth_service.dart';
 import 'services/finance_service.dart';
 import 'screens/home_screen.dart';
@@ -33,6 +34,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => FinanceService()),
+        ChangeNotifierProvider(create: (_) => AdvisorService()),
       ],
       child: FinanceTrackerApp(isPasswordRecovery: isPasswordRecovery),
     ),

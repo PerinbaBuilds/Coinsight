@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/finance_service.dart';
 import '../theme/app_theme.dart';
+import 'advisor_screen.dart';
 import 'dashboard_screen.dart';
 import 'income_screen.dart';
 import 'goals_screen.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     DashboardScreen(),
     IncomeScreen(),
     GoalsScreen(),
+    AdvisorScreen(),
     InsightsScreen(),
     HistoryScreen(),
   ];
@@ -43,6 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
       label: 'Goals',
       icon: Icons.savings_outlined,
       selectedIcon: Icons.savings,
+    ),
+    _NavItem(
+      label: 'Advisor',
+      icon: Icons.auto_awesome_outlined,
+      selectedIcon: Icons.auto_awesome,
     ),
     _NavItem(
       label: 'Insights',

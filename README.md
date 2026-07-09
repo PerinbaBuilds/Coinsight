@@ -26,6 +26,7 @@ This app was originally hosted on [Netlify](https://finance-traking-app.netlify.
 | **Monthly History** | Snapshots of past months with carry-forward balances |
 | **Recurring Expenses** | Track and manage bills that repeat monthly |
 | **Financial Insights** | Health score, spending forecast, and smart alerts |
+| **AI Financial Advisor** | Chat consultant for purchase, loan, and investment decisions — answers from your real budgets, income, goals and bills, asks follow-up questions (price, rate, tenure), factors in depreciation, and renders a before/after impact report with a projected-savings chart |
 | **Dark / Light Mode** | Full theme support across all screens |
 
 ---
@@ -40,6 +41,7 @@ This app was originally hosted on [Netlify](https://finance-traking-app.netlify.
 **Backend**
 - [Supabase](https://supabase.com) — PostgreSQL database + Authentication
 - Row Level Security — per-user data isolation
+- Supabase Edge Function (`financial-advisor`) — proxies the AI advisor to the [Groq API](https://groq.com) (Llama 3.3 70B) so the API key stays server-side
 
 **Hosting**
 - [GitHub Pages](https://pages.github.com) — Static web deployment (built into `docs/` and served from the `main` branch)
@@ -64,6 +66,14 @@ Create a Supabase project and add your credentials to `lib/config/supabase_confi
 const supabaseUrl = 'YOUR_SUPABASE_URL';
 const supabaseAnonKey = 'YOUR_ANON_KEY';
 ```
+
+### AI Advisor Setup (one-time)
+
+The advisor runs through a Supabase Edge Function so the model API key is never exposed in the web bundle:
+
+1. Create a free API key at [console.groq.com/keys](https://console.groq.com/keys) (no credit card needed).
+2. In the Supabase Dashboard → **Edge Functions** → **Deploy a new function**, name it `financial-advisor` and paste the code from [`supabase/functions/financial-advisor/index.ts`](supabase/functions/financial-advisor/index.ts).
+3. In **Edge Functions → Secrets**, add `GROQ_API_KEY` with your key.
 
 ### Build for Web
 

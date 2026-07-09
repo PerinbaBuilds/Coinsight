@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../services/advisor_service.dart';
 import '../services/finance_service.dart';
 import '../models/category.dart';
 import '../theme/app_theme.dart';
@@ -98,45 +99,8 @@ class InsightsScreen extends StatelessWidget {
     );
   }
 
-  int _computeHealthScore(FinanceService finance) {
-    int score = 0;
-
-    // Budget adherence: 40 pts
-    if (!finance.isOverBudget) {
-      score += 40;
-    } else {
-      final overBy = finance.totalActualSpent - finance.totalMonthlyBudget;
-      final ratio =
-          finance.totalMonthlyBudget == 0 ? 1.0 : overBy / finance.totalMonthlyBudget;
-      score += (40 * (1.0 - ratio.clamp(0.0, 1.0))).round();
-    }
-
-    // Savings rate: 30 pts
-    if (finance.totalIncome > 0) {
-      final savingsRate = finance.netSavings / finance.totalIncome;
-      if (savingsRate >= 0.2) {
-        score += 30;
-      } else if (savingsRate > 0) {
-        score += (30 * (savingsRate / 0.2)).round();
-      }
-    }
-
-    // Category distribution: 30 pts
-    if (finance.totalActualSpent > 0 && finance.categories.isNotEmpty) {
-      final maxPct = finance.categories
-          .map((c) => c.actualAmount / finance.totalActualSpent)
-          .reduce(math.max);
-      if (maxPct <= 0.5) {
-        score += 30;
-      } else {
-        score += (30 * (1.0 - (maxPct - 0.5) / 0.5)).round().clamp(0, 30);
-      }
-    } else {
-      score += 15; // neutral if no data
-    }
-
-    return score.clamp(0, 100);
-  }
+  int _computeHealthScore(FinanceService finance) =>
+      AdvisorService.computeHealthScore(finance);
 
   List<Widget> _buildInsights(
       FinanceService finance, List<BudgetCategory> overBudget) {
