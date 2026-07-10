@@ -20,14 +20,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final _screens = const [
-    DashboardScreen(),
-    IncomeScreen(),
-    GoalsScreen(),
-    AdvisorScreen(),
-    InsightsScreen(),
-    HistoryScreen(),
+  void _openMenu() => _scaffoldKey.currentState?.openEndDrawer();
+
+  late final List<Widget> _screens = [
+    DashboardScreen(onMenuTap: _openMenu),
+    const IncomeScreen(),
+    const GoalsScreen(),
+    const AdvisorScreen(),
+    const InsightsScreen(),
+    const HistoryScreen(),
   ];
 
   static const _navItems = [
@@ -68,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final auth = context.watch<AuthService>();
 
     return Scaffold(
+      key: _scaffoldKey,
       extendBody: true,
       body: AnimatedSwitcher(
         duration: AppTheme.motionMedium,
@@ -137,7 +141,7 @@ class _FloatingNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       child: Container(
         height: 64,
         decoration: BoxDecoration(
@@ -168,43 +172,57 @@ class _FloatingNavBar extends StatelessWidget {
                   ),
                 ],
         ),
+        // Expanded items share the width evenly, so the bar always fits the
+        // screen no matter how many tabs there are — the selected tab expands
+        // to show its label, unselected tabs collapse to just the icon.
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(items.length, (i) {
             final item = items[i];
             final selected = i == selectedIndex;
-            return GestureDetector(
-              onTap: () => onItemSelected(i),
-              behavior: HitTestBehavior.opaque,
-              child: AnimatedContainer(
-                duration: AppTheme.motionMedium,
-                curve: AppTheme.motionCurve,
-                padding: selected
-                    ? const EdgeInsets.symmetric(horizontal: 14, vertical: 10)
-                    : const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(
-                  color: selected ? AppTheme.navy : Colors.transparent,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: selected
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(item.selectedIcon,
-                              color: Colors.white, size: 20),
-                          const SizedBox(width: 6),
-                          Text(
-                            item.label,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
+            return Expanded(
+              flex: selected ? 2 : 1,
+              child: GestureDetector(
+                onTap: () => onItemSelected(i),
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: AnimatedContainer(
+                    duration: AppTheme.motionMedium,
+                    curve: AppTheme.motionCurve,
+                    height: 44,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: selected ? AppTheme.navy : Colors.transparent,
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                    child: selected
+                        ? FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(item.selectedIcon,
+                                    color: Colors.white, size: 19),
+                                const SizedBox(width: 5),
+                                Text(
+                                  item.label,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      )
-                    : Icon(item.icon,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), size: 22),
+                          )
+                        : Icon(item.icon,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.55),
+                            size: 22),
+                  ),
+                ),
               ),
             );
           }),

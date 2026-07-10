@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'finance_service.dart';
@@ -12,7 +13,29 @@ class AdvisorMessage {
   final String text;
   final ImpactReport? impact;
 
-  const AdvisorMessage({required this.role, required this.text, this.impact});
+  /// Raw <impact> JSON kept alongside the parsed report so the conversation
+  /// (including the impact dashboard) can be restored from local storage.
+  final String? impactRaw;
+
+  const AdvisorMessage({
+    required this.role,
+    required this.text,
+    this.impact,
+    this.impactRaw,
+  });
+
+  Map<String, dynamic> toJson() =>
+      {'role': role, 'text': text, if (impactRaw != null) 'impact': impactRaw};
+
+  factory AdvisorMessage.fromJson(Map<String, dynamic> j) {
+    final raw = j['impact'] as String?;
+    return AdvisorMessage(
+      role: j['role'] as String? ?? 'assistant',
+      text: j['text'] as String? ?? '',
+      impact: raw == null ? null : ImpactReport.tryParse(raw),
+      impactRaw: raw,
+    );
+  }
 }
 
 /// Machine-readable decision report the model appends to a final
@@ -112,14 +135,58 @@ class AdvisorService extends ChangeNotifier {
   final List<AdvisorMessage> _messages = [];
   bool _isThinking = false;
   String? _error;
+  bool _restored = false;
+
+  AdvisorService() {
+    _restore();
+  }
 
   List<AdvisorMessage> get messages => List.unmodifiable(_messages);
   bool get isThinking => _isThinking;
   String? get error => _error;
 
+  // Conversation is stored per user so switching accounts never mixes history.
+  String get _storageKey {
+    final uid = _supabase.auth.currentUser?.id ?? 'anon';
+    return 'advisor_history_$uid';
+  }
+
+  Future<void> _restore() async {
+    if (_restored) return;
+    _restored = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_storageKey);
+      if (raw == null) return;
+      final list = (jsonDecode(raw) as List)
+          .whereType<Map<String, dynamic>>()
+          .map(AdvisorMessage.fromJson)
+          .toList();
+      if (list.isNotEmpty && _messages.isEmpty) {
+        _messages.addAll(list);
+        notifyListeners();
+      }
+    } catch (_) {
+      // Corrupt/absent history is non-fatal — start fresh.
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        _storageKey,
+        jsonEncode([for (final m in _messages) m.toJson()]),
+      );
+    } catch (_) {
+      // Persistence is best-effort.
+    }
+  }
+
   void clearConversation() {
     _messages.clear();
     _error = null;
+    _persist();
     notifyListeners();
   }
 
@@ -154,6 +221,7 @@ class AdvisorService extends ChangeNotifier {
       _error = _friendlyError(e);
     } finally {
       _isThinking = false;
+      _persist();
       notifyListeners();
     }
   }
@@ -176,10 +244,12 @@ class AdvisorService extends ChangeNotifier {
       return AdvisorMessage(role: 'assistant', text: raw.trim());
     }
     final prose = raw.replaceRange(match.start, match.end, '').trim();
+    final impactRaw = match.group(1)!.trim();
     return AdvisorMessage(
       role: 'assistant',
       text: prose,
-      impact: ImpactReport.tryParse(match.group(1)!.trim()),
+      impact: ImpactReport.tryParse(impactRaw),
+      impactRaw: impactRaw,
     );
   }
 

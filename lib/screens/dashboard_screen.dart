@@ -15,7 +15,11 @@ import 'transactions_screen.dart';
 import 'profile_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  /// Opens the app's side menu (Profile / Manage Budgets / theme). Wired from
+  /// HomeScreen so the menu is reachable via a visible button, not only a swipe.
+  final VoidCallback? onMenuTap;
+
+  const DashboardScreen({super.key, this.onMenuTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class DashboardScreen extends StatelessWidget {
             slivers: [
               // ── Header ──────────────────────────────────────────────────
               SliverToBoxAdapter(
-                child: _DashboardHeader(finance: finance),
+                child: _DashboardHeader(finance: finance, onMenuTap: onMenuTap),
               ),
 
               // ── Alerts ──────────────────────────────────────────────────
@@ -238,7 +242,8 @@ class DashboardScreen extends StatelessWidget {
 // ── Dashboard Header ─────────────────────────────────────────────────────────
 class _DashboardHeader extends StatelessWidget {
   final FinanceService finance;
-  const _DashboardHeader({required this.finance});
+  final VoidCallback? onMenuTap;
+  const _DashboardHeader({required this.finance, this.onMenuTap});
 
   String _greeting() {
     final hour = DateTime.now().hour;
@@ -285,25 +290,43 @@ class _DashboardHeader extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Consumer<AuthService>(
-                        builder: (_, auth, __) => Text(
-                          '${_greeting()}, ${auth.displayName.isNotEmpty ? auth.displayName.split(' ').first : 'there'}!',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Row(
+                      children: [
+                        if (onMenuTap != null) ...[
+                          _CircleIconButton(
+                            icon: Icons.menu_rounded,
+                            onTap: onMenuTap!,
+                            tooltip: 'Menu',
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Consumer<AuthService>(
+                                builder: (_, auth, __) => Text(
+                                  '${_greeting()}, ${auth.displayName.isNotEmpty ? auth.displayName.split(' ').first : 'there'}!',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                monthLabel,
+                                style: const TextStyle(
+                                    color: Colors.white70, fontSize: 13),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      Text(
-                        monthLabel,
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 13),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
@@ -752,4 +775,30 @@ class _StripePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// ── Circular header icon button ──────────────────────────────────────────────
+class _CircleIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final String? tooltip;
+
+  const _CircleIconButton({required this.icon, required this.onTap, this.tooltip});
+
+  @override
+  Widget build(BuildContext context) {
+    final button = Material(
+      color: Colors.white.withValues(alpha: 0.18),
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Icon(icon, color: Colors.white, size: 22),
+        ),
+      ),
+    );
+    return tooltip == null ? button : Tooltip(message: tooltip!, child: button);
+  }
 }
