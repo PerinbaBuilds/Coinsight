@@ -245,13 +245,6 @@ class _DashboardHeader extends StatelessWidget {
   final VoidCallback? onMenuTap;
   const _DashboardHeader({required this.finance, this.onMenuTap});
 
-  String _greeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
-  }
-
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
@@ -291,39 +284,25 @@ class _DashboardHeader extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (onMenuTap != null) ...[
-                          _CircleIconButton(
-                            icon: Icons.menu_rounded,
-                            onTap: onMenuTap!,
-                            tooltip: 'Menu',
+                        Consumer<AuthService>(
+                          builder: (_, auth, __) => Text(
+                            'Hello, ${auth.displayName.isNotEmpty ? auth.displayName.split(' ').first : 'there'} 👋',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          const SizedBox(width: 10),
-                        ],
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Consumer<AuthService>(
-                                builder: (_, auth, __) => Text(
-                                  '${_greeting()}, ${auth.displayName.isNotEmpty ? auth.displayName.split(' ').first : 'there'}!',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                monthLabel,
-                                style: const TextStyle(
-                                    color: Colors.white70, fontSize: 13),
-                              ),
-                            ],
-                          ),
+                        ),
+                        Text(
+                          monthLabel,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 13),
                         ),
                       ],
                     ),
@@ -356,11 +335,12 @@ class _DashboardHeader extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.account_circle,
                             color: Colors.white, size: 26),
-                        onPressed: () => Navigator.push(
-                          context,
-                          AppTheme.slideRoute(const ProfileScreen()),
-                        ),
-                        tooltip: 'Profile',
+                        onPressed: onMenuTap ??
+                            () => Navigator.push(
+                                  context,
+                                  AppTheme.slideRoute(const ProfileScreen()),
+                                ),
+                        tooltip: 'Menu',
                       ),
                     ],
                   ),
@@ -775,30 +755,4 @@ class _StripePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-// ── Circular header icon button ──────────────────────────────────────────────
-class _CircleIconButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final String? tooltip;
-
-  const _CircleIconButton({required this.icon, required this.onTap, this.tooltip});
-
-  @override
-  Widget build(BuildContext context) {
-    final button = Material(
-      color: Colors.white.withValues(alpha: 0.18),
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Icon(icon, color: Colors.white, size: 22),
-        ),
-      ),
-    );
-    return tooltip == null ? button : Tooltip(message: tooltip!, child: button);
-  }
 }
