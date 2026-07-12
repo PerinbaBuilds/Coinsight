@@ -140,10 +140,12 @@ class _FloatingNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 12),
       child: Container(
-        height: 64,
+        height: 72,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
           gradient: Theme.of(context).brightness == Brightness.dark
               ? const LinearGradient(
@@ -172,62 +174,54 @@ class _FloatingNavBar extends StatelessWidget {
                   ),
                 ],
         ),
-        // Expanded items share the width evenly, so the bar always fits the
-        // screen no matter how many tabs there are — the selected tab expands
-        // to show its label, unselected tabs collapse to just the icon.
+        // Every tab shows its icon and label stacked vertically and shares the
+        // width evenly, so all names stay visible, aligned, and uncramped.
         child: Row(
           children: List.generate(items.length, (i) {
             final item = items[i];
             final selected = i == selectedIndex;
+            final unselectedColor =
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55);
             return Expanded(
-              // Give the selected tab extra room so its label has breathing
-              // space and never feels cramped against the pill edges.
-              flex: selected ? 5 : 3,
               child: GestureDetector(
                 onTap: () => onItemSelected(i),
                 behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: AnimatedContainer(
-                    duration: AppTheme.motionMedium,
-                    curve: AppTheme.motionCurve,
-                    height: 46,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: selected ? AppTheme.navy : Colors.transparent,
-                      borderRadius: BorderRadius.circular(23),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedContainer(
+                      duration: AppTheme.motionMedium,
+                      curve: AppTheme.motionCurve,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: selected
+                            ? AppTheme.navy.withValues(
+                                alpha: isDark ? 0.9 : 1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        selected ? item.selectedIcon : item.icon,
+                        color: selected ? Colors.white : unselectedColor,
+                        size: 22,
+                      ),
                     ),
-                    child: selected
-                        ? Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(item.selectedIcon,
-                                      color: Colors.white, size: 19),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    item.label,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Icon(item.icon,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.55),
-                            size: 22),
-                  ),
+                    const SizedBox(height: 3),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        item.label,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: selected ? AppTheme.navy : unselectedColor,
+                          fontSize: 11,
+                          fontWeight:
+                              selected ? FontWeight.w700 : FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );

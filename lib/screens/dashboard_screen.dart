@@ -367,38 +367,38 @@ class _DashboardHeader extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Big spending amount
+              // Big spending amount — the amount and the left/over pill share
+              // the top line; the "of <budget>" caption sits on its own line so
+              // nothing collides on narrow screens.
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TweenAnimationBuilder<double>(
-                    tween: Tween(
-                        begin: 0, end: finance.totalActualSpent),
-                    duration: const Duration(milliseconds: 1200),
-                    curve: AppTheme.motionCurve,
-                    builder: (_, val, __) => Text(
-                      '$sym${val.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -1,
+                  Flexible(
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(
+                          begin: 0, end: finance.totalActualSpent),
+                      duration: const Duration(milliseconds: 1200),
+                      curve: AppTheme.motionCurve,
+                      builder: (_, val, __) => FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '$sym${val.toStringAsFixed(0)}',
+                          maxLines: 1,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -1,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(
-                      'of $sym${finance.totalMonthlyBudget.toStringAsFixed(0)} budget',
-                      style: const TextStyle(
-                          color: Colors.white60, fontSize: 14),
-                    ),
-                  ),
-                  const Spacer(),
+                  const SizedBox(width: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 5),
+                        horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: isOver
                           ? AppTheme.rose.withValues(alpha: 0.25)
@@ -423,6 +423,11 @@ class _DashboardHeader extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'of $sym${finance.totalMonthlyBudget.toStringAsFixed(0)} budget',
+                style: const TextStyle(color: Colors.white60, fontSize: 14),
               ),
               const SizedBox(height: 14),
 
