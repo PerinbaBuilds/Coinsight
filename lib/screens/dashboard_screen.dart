@@ -94,6 +94,15 @@ class DashboardScreen extends StatelessWidget {
                         icon: Icon(Icons.more_vert,
                             color: Theme.of(context).colorScheme.onSurface),
                         tooltip: 'Category actions',
+                        color: Theme.of(context).colorScheme.surface,
+                        elevation: 8,
+                        surfaceTintColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusMd),
+                          side: BorderSide(
+                              color: Theme.of(context).colorScheme.outline),
+                        ),
                         onSelected: (value) {
                           if (value == 'manage') {
                             Navigator.push(
