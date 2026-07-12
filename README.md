@@ -31,6 +31,29 @@ This app was originally hosted on [Netlify](https://finance-traking-app.netlify.
 
 ---
 
+## AI Financial Advisor
+
+An in-app consultant that answers real money decisions — *"Can I buy a MacBook now or after a week?"*, *"Should I take this loan?"*, *"How much can I safely invest this month?"* — grounded entirely in **your own data**, not generic advice.
+
+### What it does
+
+- **Grounded in your finances.** Every reply is based on a live snapshot of your budgets, category spending, income, savings goals, recurring bills, past-month history, emergency-buffer estimate, and financial-health score. It cites the specific numbers that drive its conclusion.
+- **Asks before it answers.** If a decision needs details it doesn't have — price, loan amount, interest rate, tenure, expected return, timeline — it asks a short follow-up first instead of guessing.
+- **Thinks like an advisor.** It weighs liquidity after the purchase, months of emergency buffer, impact on your goals, upcoming bills, and — for assets — depreciation and opportunity cost. For loans it estimates the monthly payment and flags debt-to-income concerns; for investments it checks your buffer and goal timelines first.
+- **Visual impact report.** When it gives a final recommendation, it renders a decision card: a **GO / WAIT / NOT ADVISED** verdict, a **before → after** comparison of net savings, budget used, emergency buffer, and health score, a **6-month projected-savings chart** (with vs. without the decision), and actionable suggestions.
+
+### Chat history
+
+- Conversations are **saved per user** and survive reloads and tab switches.
+- Starting a **new chat** archives the current one instead of discarding it.
+- A **history** view lists past conversations by date; open any of them read-only, then tap **"Continue with today's finances"** to reopen it as the active chat so new advice uses your current data.
+
+### How it works
+
+The advisor is powered by a **Supabase Edge Function** (`financial-advisor`) that proxies requests to the [Groq API](https://groq.com) (Llama 3.3 70B). The model API key lives only in a Supabase secret and is never shipped in the web bundle, and the function verifies the caller is a signed-in user before spending any tokens. See [AI Advisor Setup](#ai-advisor-setup-one-time) below.
+
+---
+
 ## Tech Stack
 
 **Frontend**
