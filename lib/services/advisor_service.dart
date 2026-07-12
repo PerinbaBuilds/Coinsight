@@ -129,10 +129,48 @@ class TimelinePoint {
   });
 }
 
+/// A finished conversation, saved so the user can revisit past advice by date.
+class ArchivedChat {
+  final String id;
+  final DateTime date;
+  final List<AdvisorMessage> messages;
+
+  const ArchivedChat({
+    required this.id,
+    required this.date,
+    required this.messages,
+  });
+
+  /// Short label for the history list — the user's first question.
+  String get title {
+    final firstUser = messages.firstWhere(
+      (m) => m.role == 'user',
+      orElse: () => const AdvisorMessage(role: 'user', text: 'Conversation'),
+    );
+    return firstUser.text;
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'date': date.toIso8601String(),
+        'messages': [for (final m in messages) m.toJson()],
+      };
+
+  factory ArchivedChat.fromJson(Map<String, dynamic> j) => ArchivedChat(
+        id: j['id'] as String? ?? DateTime.now().microsecondsSinceEpoch.toString(),
+        date: DateTime.tryParse(j['date'] as String? ?? '') ?? DateTime.now(),
+        messages: ((j['messages'] as List?) ?? const [])
+            .whereType<Map<String, dynamic>>()
+            .map(AdvisorMessage.fromJson)
+            .toList(),
+      );
+}
+
 class AdvisorService extends ChangeNotifier {
   final _supabase = Supabase.instance.client;
 
   final List<AdvisorMessage> _messages = [];
+  final List<ArchivedChat> _history = [];
   bool _isThinking = false;
   String? _error;
   bool _restored = false;
@@ -142,30 +180,39 @@ class AdvisorService extends ChangeNotifier {
   }
 
   List<AdvisorMessage> get messages => List.unmodifiable(_messages);
+
+  /// Past conversations, most recent first.
+  List<ArchivedChat> get history => List.unmodifiable(
+      _history.reversed.toList(growable: false));
   bool get isThinking => _isThinking;
   String? get error => _error;
 
-  // Conversation is stored per user so switching accounts never mixes history.
-  String get _storageKey {
-    final uid = _supabase.auth.currentUser?.id ?? 'anon';
-    return 'advisor_history_$uid';
-  }
+  // Stored per user so switching accounts never mixes history.
+  String get _uid => _supabase.auth.currentUser?.id ?? 'anon';
+  String get _activeKey => 'advisor_history_$_uid';
+  String get _archiveKey => 'advisor_archive_$_uid';
 
   Future<void> _restore() async {
     if (_restored) return;
     _restored = true;
     try {
       final prefs = await SharedPreferences.getInstance();
-      final raw = prefs.getString(_storageKey);
-      if (raw == null) return;
-      final list = (jsonDecode(raw) as List)
-          .whereType<Map<String, dynamic>>()
-          .map(AdvisorMessage.fromJson)
-          .toList();
-      if (list.isNotEmpty && _messages.isEmpty) {
-        _messages.addAll(list);
-        notifyListeners();
+
+      final active = prefs.getString(_activeKey);
+      if (active != null && _messages.isEmpty) {
+        _messages.addAll((jsonDecode(active) as List)
+            .whereType<Map<String, dynamic>>()
+            .map(AdvisorMessage.fromJson));
       }
+
+      final archive = prefs.getString(_archiveKey);
+      if (archive != null && _history.isEmpty) {
+        _history.addAll((jsonDecode(archive) as List)
+            .whereType<Map<String, dynamic>>()
+            .map(ArchivedChat.fromJson));
+      }
+
+      if (_messages.isNotEmpty || _history.isNotEmpty) notifyListeners();
     } catch (_) {
       // Corrupt/absent history is non-fatal — start fresh.
     }
@@ -175,17 +222,57 @@ class AdvisorService extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(
-        _storageKey,
+        _activeKey,
         jsonEncode([for (final m in _messages) m.toJson()]),
+      );
+      await prefs.setString(
+        _archiveKey,
+        jsonEncode([for (final c in _history) c.toJson()]),
       );
     } catch (_) {
       // Persistence is best-effort.
     }
   }
 
-  void clearConversation() {
+  void _archiveCurrent() {
+    if (_messages.isEmpty) return;
+    _history.add(ArchivedChat(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      date: DateTime.now(),
+      messages: List.of(_messages),
+    ));
+    // Keep the archive bounded so storage stays small.
+    while (_history.length > 30) {
+      _history.removeAt(0);
+    }
+  }
+
+  /// Archives the current conversation (if any) and starts a fresh one.
+  void startNewChat() {
+    _archiveCurrent();
     _messages.clear();
     _error = null;
+    _persist();
+    notifyListeners();
+  }
+
+  /// Reopens an archived conversation as the active one so the user can
+  /// continue it with today's finances. The current chat is archived first.
+  void resumeChat(String id) {
+    final idx = _history.indexWhere((c) => c.id == id);
+    if (idx == -1) return;
+    final chat = _history.removeAt(idx);
+    _archiveCurrent();
+    _messages
+      ..clear()
+      ..addAll(chat.messages);
+    _error = null;
+    _persist();
+    notifyListeners();
+  }
+
+  void deleteChat(String id) {
+    _history.removeWhere((c) => c.id == id);
     _persist();
     notifyListeners();
   }

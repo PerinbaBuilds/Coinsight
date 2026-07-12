@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../services/advisor_service.dart';
@@ -56,6 +57,16 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
     });
   }
 
+  void _openHistory(BuildContext context, AdvisorService advisor) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (_) => _HistorySheet(advisor: advisor),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AdvisorService>(
@@ -71,11 +82,17 @@ class _AdvisorScreenState extends State<AdvisorScreen> {
             title: const Text('Advisor'),
             automaticallyImplyLeading: false,
             actions: [
+              if (advisor.history.isNotEmpty)
+                IconButton(
+                  tooltip: 'Chat history',
+                  icon: const Icon(Icons.history),
+                  onPressed: () => _openHistory(context, advisor),
+                ),
               if (advisor.messages.isNotEmpty)
                 IconButton(
-                  tooltip: 'New conversation',
-                  icon: const Icon(Icons.refresh),
-                  onPressed: advisor.clearConversation,
+                  tooltip: 'New chat',
+                  icon: const Icon(Icons.add_comment_outlined),
+                  onPressed: advisor.startNewChat,
                 ),
             ],
           ),
@@ -734,6 +751,219 @@ class _InputBar extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── History sheet ────────────────────────────────────────────────────────────
+class _HistorySheet extends StatelessWidget {
+  final AdvisorService advisor;
+  const _HistorySheet({required this.advisor});
+
+  @override
+  Widget build(BuildContext context) {
+    final chats = advisor.history;
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.75,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+              child: Row(
+                children: [
+                  const Icon(Icons.history, color: AppTheme.primary),
+                  const SizedBox(width: 8),
+                  Text('Chat History',
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ],
+              ),
+            ),
+            Flexible(
+              child: chats.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Text('No past conversations yet.',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      itemCount: chats.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, i) {
+                        final chat = chats[i];
+                        return _HistoryTile(
+                          chat: chat,
+                          onOpen: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              AppTheme.slideRoute(
+                                _ArchivedChatView(
+                                    advisor: advisor, chat: chat),
+                              ),
+                            );
+                          },
+                          onDelete: () => advisor.deleteChat(chat.id),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryTile extends StatelessWidget {
+  final ArchivedChat chat;
+  final VoidCallback onOpen;
+  final VoidCallback onDelete;
+
+  const _HistoryTile({
+    required this.chat,
+    required this.onOpen,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Material(
+      color: isDark ? AppTheme.surfaceVariant : Colors.white,
+      borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+        onTap: onOpen,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+            border:
+                Border.all(color: Theme.of(context).colorScheme.outline),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+                ),
+                child: const Icon(Icons.chat_bubble_outline,
+                    size: 18, color: AppTheme.primary),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      chat.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      DateFormat('MMM d, yyyy · h:mm a').format(chat.date),
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.55)),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                tooltip: 'Delete',
+                icon: Icon(Icons.delete_outline,
+                    size: 20,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.4)),
+                onPressed: onDelete,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Archived conversation viewer ─────────────────────────────────────────────
+class _ArchivedChatView extends StatelessWidget {
+  final AdvisorService advisor;
+  final ArchivedChat chat;
+
+  const _ArchivedChatView({required this.advisor, required this.chat});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Theme.of(context).brightness == Brightness.dark
+            ? Container(
+                decoration:
+                    const BoxDecoration(gradient: AppTheme.primaryGradient))
+            : null,
+        title: const Text('Past Advice'),
+      ),
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            color: AppTheme.primary.withValues(alpha: 0.08),
+            child: Text(
+              DateFormat('EEEE, MMM d, yyyy · h:mm a').format(chat.date),
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              itemCount: chat.messages.length,
+              itemBuilder: (context, i) =>
+                  _MessageBubble(message: chat.messages[i]),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.refresh),
+                  label: const Text("Continue with today's finances"),
+                  onPressed: () {
+                    advisor.resumeChat(chat.id);
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Conversation reopened — new advice will use your current finances.'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

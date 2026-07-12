@@ -180,39 +180,45 @@ class _FloatingNavBar extends StatelessWidget {
             final item = items[i];
             final selected = i == selectedIndex;
             return Expanded(
-              flex: selected ? 2 : 1,
+              // Give the selected tab extra room so its label has breathing
+              // space and never feels cramped against the pill edges.
+              flex: selected ? 5 : 3,
               child: GestureDetector(
                 onTap: () => onItemSelected(i),
                 behavior: HitTestBehavior.opaque,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: AnimatedContainer(
                     duration: AppTheme.motionMedium,
                     curve: AppTheme.motionCurve,
-                    height: 44,
+                    height: 46,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: selected ? AppTheme.navy : Colors.transparent,
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(23),
                     ),
                     child: selected
-                        ? FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(item.selectedIcon,
-                                    color: Colors.white, size: 19),
-                                const SizedBox(width: 5),
-                                Text(
-                                  item.label,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w600,
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(item.selectedIcon,
+                                      color: Colors.white, size: 19),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    item.label,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           )
                         : Icon(item.icon,

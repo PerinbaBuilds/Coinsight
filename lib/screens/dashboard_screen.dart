@@ -71,19 +71,25 @@ class DashboardScreen extends StatelessWidget {
               // ── Section Header ───────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 4, 8),
+                  padding: const EdgeInsets.fromLTRB(16, 20, 8, 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Budget Categories',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
+                      Flexible(
+                        child: Text(
+                          'Budget Categories',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
+                      const SizedBox(width: 4),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           TextButton.icon(
                             onPressed: () => Navigator.push(
@@ -96,17 +102,23 @@ class DashboardScreen extends StatelessWidget {
                             style: TextButton.styleFrom(
                               foregroundColor: Theme.of(context).colorScheme.primary,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                  horizontal: 6, vertical: 4),
+                              minimumSize: const Size(0, 36),
+                              tapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             ),
                           ),
                           TextButton.icon(
                             onPressed: () => _handleResetMonth(context, finance),
                             icon: const Icon(Icons.restart_alt, size: 16),
-                            label: const Text('Reset Month'),
+                            label: const Text('Reset'),
                             style: TextButton.styleFrom(
                               foregroundColor: AppTheme.rose,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                  horizontal: 6, vertical: 4),
+                              minimumSize: const Size(0, 36),
+                              tapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             ),
                           ),
                         ],
@@ -289,7 +301,7 @@ class _DashboardHeader extends StatelessWidget {
                       children: [
                         Consumer<AuthService>(
                           builder: (_, auth, __) => Text(
-                            'Hello, ${auth.displayName.isNotEmpty ? auth.displayName.split(' ').first : 'there'} 👋',
+                            'Hello, ${auth.displayName.isNotEmpty ? auth.displayName.split(' ').first : 'there'}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
