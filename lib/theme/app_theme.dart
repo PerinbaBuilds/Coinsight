@@ -332,11 +332,14 @@ class AppTheme {
                 ? primary.withValues(alpha: 0.4)
                 : border),
       ),
-      popupMenuTheme: const PopupMenuThemeData(
+      popupMenuTheme: PopupMenuThemeData(
         color: surfaceVariant,
+        elevation: 8,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.black.withValues(alpha: 0.5),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(radiusSm)),
-          side: BorderSide(color: border),
+          borderRadius: BorderRadius.circular(radiusMd),
+          side: const BorderSide(color: border),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
@@ -455,6 +458,16 @@ class AppTheme {
         backgroundColor: lSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusLg),
+          side: const BorderSide(color: lBorder),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: lSurface,
+        elevation: 8,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.black.withValues(alpha: 0.15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radiusMd),
           side: const BorderSide(color: lBorder),
         ),
       ),
