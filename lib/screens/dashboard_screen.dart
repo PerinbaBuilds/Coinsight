@@ -88,37 +88,44 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextButton.icon(
-                            onPressed: () => Navigator.push(
+                      // Actions live in an overflow menu so the header never
+                      // overflows, regardless of screen width.
+                      PopupMenuButton<String>(
+                        icon: Icon(Icons.more_vert,
+                            color: Theme.of(context).colorScheme.onSurface),
+                        tooltip: 'Category actions',
+                        onSelected: (value) {
+                          if (value == 'manage') {
+                            Navigator.push(
                               context,
                               AppTheme.slideRoute(
                                   const ManageBudgetsScreen()),
-                            ),
-                            icon: const Icon(Icons.tune_outlined, size: 16),
-                            label: const Text('Manage'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Theme.of(context).colorScheme.primary,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 4),
-                              minimumSize: const Size(0, 36),
-                              tapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
+                            );
+                          } else if (value == 'reset') {
+                            _handleResetMonth(context, finance);
+                          }
+                        },
+                        itemBuilder: (_) => [
+                          const PopupMenuItem(
+                            value: 'manage',
+                            child: Row(
+                              children: [
+                                Icon(Icons.tune_outlined, size: 18),
+                                SizedBox(width: 12),
+                                Text('Manage Budgets'),
+                              ],
                             ),
                           ),
-                          TextButton.icon(
-                            onPressed: () => _handleResetMonth(context, finance),
-                            icon: const Icon(Icons.restart_alt, size: 16),
-                            label: const Text('Reset'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: AppTheme.rose,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 4),
-                              minimumSize: const Size(0, 36),
-                              tapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
+                          const PopupMenuItem(
+                            value: 'reset',
+                            child: Row(
+                              children: [
+                                Icon(Icons.restart_alt,
+                                    size: 18, color: AppTheme.rose),
+                                SizedBox(width: 12),
+                                Text('Reset Month',
+                                    style: TextStyle(color: AppTheme.rose)),
+                              ],
                             ),
                           ),
                         ],
