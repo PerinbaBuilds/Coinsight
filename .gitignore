@@ -34,7 +34,3 @@ web/flutter_bootstrap.js
 # OS
 .DS_Store
 Thumbs.db
-
-# Claude Code
-.claude/
-build/ 
