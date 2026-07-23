@@ -9,6 +9,7 @@ import 'income_screen.dart';
 import 'goals_screen.dart';
 import 'insights_screen.dart';
 import 'history_screen.dart';
+import 'manage_budgets_screen.dart';
 import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -109,8 +110,19 @@ class _HomeScreenState extends State<HomeScreen> {
               context, AppTheme.slideRoute(const ProfileScreen()));
         },
         onManageTap: () {
+          final finance = context.read<FinanceService>();
           Navigator.pop(context);
-          setState(() => _selectedIndex = 0);
+          Navigator.push(
+              context, AppTheme.slideRoute(const ManageBudgetsScreen()));
+          if (finance.isBudgetLocked) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    'Budgets are locked — edits open again on the 1st of next month.'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
         },
       ),
     );
@@ -311,22 +323,6 @@ class _AppDrawer extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w500)),
             onTap: onManageTap,
           ),
-          Consumer<FinanceService>(
-            builder: (context, finance, _) => SwitchListTile(
-              secondary: Icon(
-                finance.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                color: AppTheme.navy,
-              ),
-              title: Text(
-                finance.isDarkMode ? 'Dark Mode' : 'Light Mode',
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-              value: finance.isDarkMode,
-              activeThumbColor: AppTheme.primary,
-              onChanged: (_) => finance.toggleDarkMode(),
-            ),
-          ),
-          const Divider(indent: 16, endIndent: 16),
         ],
       ),
     );
