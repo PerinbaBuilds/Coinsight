@@ -526,7 +526,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               Center(
                 child: Text(
-                  '© ${DateTime.now().year} Finance Tracker. All rights reserved.',
+                  '© ${DateTime.now().year} Coinsight. All rights reserved.',
                   style: TextStyle(
                     color: colorScheme.onSurface.withValues(alpha: 0.4),
                     fontSize: 12,

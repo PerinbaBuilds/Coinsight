@@ -1,10 +1,10 @@
-# Finance Tracker
+# Coinsight
 
 > A professional personal finance tracking app built with **Flutter & Supabase**.
 
-Take full control of your money. Finance Tracker lets you set monthly budgets per category, log expenses and income, monitor savings goals, track recurring bills, and view your financial health score — all in a clean, modern interface with full dark/light mode support.
+Take full control of your money. Coinsight lets you set monthly budgets per category, log expenses and income, monitor savings goals, track recurring bills, and view your financial health score — all in a clean, modern interface with full dark/light mode support.
 
-**Live App:** [perinbabuilds.github.io/Finance-App](https://perinbabuilds.github.io/Finance-App/)
+**Live App:** [perinbabuilds.github.io/Coinsight](https://perinbabuilds.github.io/Coinsight/)
 
 This app was originally hosted on [Netlify](https://finance-traking-app.netlify.app), but the free tier's build credits ran out, so it's now deployed on GitHub Pages instead. The Netlify link above is kept for reference and may no longer reflect the latest build — use the GitHub Pages link for the current version.
 
@@ -75,8 +75,8 @@ The advisor is powered by a **Supabase Edge Function** (`financial-advisor`) tha
 ## Getting Started
 
 ```bash
-git clone https://github.com/PerinbaBuilds/Finance-App.git
-cd Finance-App
+git clone https://github.com/PerinbaBuilds/Coinsight.git
+cd Coinsight
 flutter pub get
 flutter run -d chrome
 ```

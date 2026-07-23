@@ -1,5 +1,5 @@
 # Software Requirements Specification
-## Finance Tracker — Personal Budget Management App
+## Coinsight — Personal Budget Management App
 **Version:** 2.0  
 **Date:** July 2026  
 **Author:** Athiban S (PerinbaBuilds)
@@ -9,10 +9,10 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This document defines the functional and non-functional requirements for the Finance Tracker web application — a personal finance management tool that allows users to track income, expenses, savings goals, and monthly budgets.
+This document defines the functional and non-functional requirements for the Coinsight web application — a personal finance management tool that allows users to track income, expenses, savings goals, and monthly budgets.
 
 ### 1.2 Scope
-Finance Tracker is a Flutter web application backed by Supabase. It is deployed on GitHub Pages and targets individual users who want a minimalist, theme-adaptive personal finance dashboard. As of v2.0 it also includes an **AI Financial Advisor** that answers purchase, loan, and investment decisions using the user's own financial data.
+Coinsight is a Flutter web application backed by Supabase. It is deployed on GitHub Pages and targets individual users who want a minimalist, theme-adaptive personal finance dashboard. As of v2.0 it also includes an **AI Financial Advisor** that answers purchase, loan, and investment decisions using the user's own financial data.
 
 ### 1.3 Definitions
 | Term | Meaning |
@@ -37,7 +37,7 @@ A single-page web app (Flutter compiled to JS/HTML). Auth via Supabase (email/pa
 
 ### 2.3 Operating Environment
 - Modern web browsers (Chrome, Firefox, Safari, Edge)
-- Hosted on GitHub Pages (`perinbabuilds.github.io/Finance-App/`)
+- Hosted on GitHub Pages (`perinbabuilds.github.io/Coinsight/`)
 - Supabase project for auth + database
 
 ### 2.4 Constraints
@@ -177,7 +177,7 @@ Days 1–7: open. Days 8–end of month: locked. Resets on the 1st of each month
 
 ### 6.2 Password Reset Flow
 1. User clicks "Forgot Password" → `AuthService.resetPassword(email)` called
-2. Supabase sends email with link: `https://perinbabuilds.github.io/Finance-App/?type=recovery&code=xxx`
+2. Supabase sends email with link: `https://perinbabuilds.github.io/Coinsight/?type=recovery&code=xxx`
 3. App detects `Uri.base.queryParameters['type'] == 'recovery'` before Supabase initializes
 4. `_AuthGate` shows `ResetPasswordScreen` immediately
 5. User sets new password → `signOut()` fired → `_AuthGate` transitions to `LoginScreen`

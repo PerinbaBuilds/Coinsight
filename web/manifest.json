@@ -1,6 +1,6 @@
 {
-    "name": "Finance Tracker",
-    "short_name": "Finance Tracker",
+    "name": "Coinsight",
+    "short_name": "Coinsight",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#050E09",

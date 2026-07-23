@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 22),
 
                 Text(
-                  'Finance Tracker',
+                  'Coinsight',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
@@ -307,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 Center(
                   child: Text(
-                    '© ${DateTime.now().year} Finance Tracker. All rights reserved.',
+                    '© ${DateTime.now().year} Coinsight. All rights reserved.',
                     style: TextStyle(
                       color: scheme.onSurface.withValues(alpha: 0.4),
                       fontSize: 12,
