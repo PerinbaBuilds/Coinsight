@@ -417,41 +417,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               const SizedBox(height: 12),
 
-              // Dark mode
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                    border: Border.all(
-                        color: colorScheme.outline.withValues(alpha: isDark ? 1.0 : 0.5)),
-                  ),
-                  child: SwitchListTile(
-                    title: Text('Dark Mode',
-                        style: TextStyle(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w500)),
-                    secondary: const Icon(Icons.dark_mode_outlined,
-                        color: AppTheme.primary),
-                    value: finance.isDarkMode,
-                    onChanged: (_) => finance.toggleDarkMode(),
-                    activeThumbColor: AppTheme.primary,
-                  ),
-                ),
-              )
-                  .animate()
-                  .fadeIn(delay: 340.ms, duration: 350.ms),
-
-              const SizedBox(height: 12),
-
               // Export CSV
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
