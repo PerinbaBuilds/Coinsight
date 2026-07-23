@@ -50088,7 +50088,7 @@ p=p==null?o:p.bz(B.i)
 i=A.qI(k,B.aA,new A.p6(o,B.i,o,o,0,B.a4,new A.c7(l,B.fY)),o,B.IE,new A.n5(B.i,o,o,o,new A.c7(s,B.fY),o,o,o,o,o,o,o,o,o),B.L8,o,new A.tn(h),B.MM,m,g,B.PF,new A.uu(j),new A.qc(B.i,new A.c7(q,B.fY),o,8,r,B.y,o,o,o,o,o,o,o),B.qX,A.aTg(o,o,B.j_,B.hb,B.kG,o,p,o,o,o,o,B.rO,new A.c7(A.ak(10),B.q),o),o,new A.qD(i),n,!0)
 p=A.b6O()
 m=b.d?B.F0:B.a5i
-return new A.uc(new A.JE(this.a.c,o),"Finance Tracker",i,p,m,B.cH,B.aC,!1,o)},
+return new A.uc(new A.JE(this.a.c,o),"Coinsight",i,p,m,B.cH,B.aC,!1,o)},
 $C:"$3",
 $R:3,
 $S:543}
@@ -50193,7 +50193,7 @@ $S:0}
 A.a6E.prototype={
 E(a){var s=null,r=A.o(a),q=A.dg(A.aM(s,B.OF,B.l,s,s,new A.aJ(s,s,s,A.ak(26),A.b([new A.aO(-6,B.w,B.v.G(0.22),B.Vb,28),new A.aO(0,B.w,B.n.G(0.35),B.bg,12)],t.V),B.jQ,B.r),s,88,s,s,s,s,s,88),new A.aLP()),p=A.aV(0,11e5,0,0)
 r=r.ax.k3
-return A.fU(s,A.dF(A.dI(A.dg(A.b8(A.b([q.pU(A.aZK(s,new A.h(1,1),B.aC,s,p,new A.h(1.06,1.06),s)),B.ev,A.S("Finance Tracker",s,s,s,A.a4(s,s,r,s,s,s,s,s,s,s,s,22,s,s,B.z,s,s,!0,s,-0.3,s,s,s,s,s,s),s,s,s),B.dG,A.S("Loading your dashboard\u2026",s,s,s,A.a4(s,s,r.G(0.55),s,s,s,s,s,s,s,s,13,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.ev,A.cC(A.aWH(B.v.G(0.12),B.v,3),32,32)],t.p),B.p,s,B.bW,B.m),s),s,A.aV(0,4e5,0,0)),s,s),s,s,!1,s,s)}}
+return A.fU(s,A.dF(A.dI(A.dg(A.b8(A.b([q.pU(A.aZK(s,new A.h(1,1),B.aC,s,p,new A.h(1.06,1.06),s)),B.ev,A.S("Coinsight",s,s,s,A.a4(s,s,r,s,s,s,s,s,s,s,s,22,s,s,B.z,s,s,!0,s,-0.3,s,s,s,s,s,s),s,s,s),B.dG,A.S("Loading your dashboard\u2026",s,s,s,A.a4(s,s,r.G(0.55),s,s,s,s,s,s,s,s,13,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.ev,A.cC(A.aWH(B.v.G(0.12),B.v,3),32,32)],t.p),B.p,s,B.bW,B.m),s),s,A.aV(0,4e5,0,0)),s,s),s,s,!1,s,s)}}
 A.aLP.prototype={
 $1(a){return a.G5(0,!0)},
 $S:130}
@@ -50789,7 +50789,7 @@ return A.E($async$tg,r)},
 E(a){var s,r,q,p,o,n,m,l,k,j,i=this,h=null,g=A.o(a).ax,f=A.o(a).ax.a===B.B,e=B.v.G(0.1),d=A.ak(22)
 d=A.dF(A.aM(h,B.Ob,B.l,h,h,new A.aJ(e,h,A.cp(B.v.G(0.25),1.5),d,A.b([new A.aO(4,B.w,B.v.G(0.18),B.f,40)],t.V),h,B.r),h,76,h,h,h,h,h,76),h,h)
 e=g.k3
-s=A.S("Finance Tracker",h,h,h,A.a4(h,h,e,h,h,h,h,h,h,h,h,26,h,h,B.z,h,h,!0,h,-0.5,h,h,h,h,h,h),B.bs,h,h)
+s=A.S("Coinsight",h,h,h,A.a4(h,h,e,h,h,h,h,h,h,h,h,26,h,h,B.z,h,h,!0,h,-0.5,h,h,h,h,h,h),B.bs,h,h)
 r=A.S("Track smarter. Save better.",h,h,h,A.a4(h,h,e.G(0.6),h,h,h,h,h,h,h,h,14,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),B.bs,h,h)
 q=A.b0_(B.ul,i.e,B.nq,B.il,"Email address",!1,h,h,B.ii,new A.aHb())
 p=i.r
@@ -50807,7 +50807,7 @@ if(k==null)k=e}else k=m
 k=A.ce(A.xl(k.G(f?1:0.5),h),1,h)
 j=A.S("or",h,h,h,A.a4(h,h,e.G(0.4),h,h,h,h,h,h,h,h,13,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h,h)
 if(l){m=g.n
-if(m==null)m=e}return A.fU(h,A.ji(!0,A.vc(A.xG(h,A.fW(A.dI(A.dg(A.b8(A.b([B.Et,d,B.Eq,s,B.dG,r,B.Es,new A.wJ(o,B.pD,h),new A.dm(B.cy,h,h,p,h),B.dG,q,B.oF,A.b5(A.b([k,new A.ay(B.f4,j,h),A.ce(A.xl(m.G(f?1:0.5),h),1,h)],n),B.p,B.k,B.m,0),B.ev,A.b5(A.b([A.S("Don't have an account? ",h,h,h,A.a4(h,h,e.G(0.6),h,h,h,h,h,h,h,h,14,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h,h),A.ed(h,B.a59,B.P,!1,h,h,h,h,h,h,h,h,h,h,h,h,h,h,h,h,h,new A.aHg(a),h,h,h,h,h,h,!1,B.aD)],n),B.p,B.bW,B.m,0),B.ew,A.dF(A.S("\xa9 "+A.bo(new A.bI(Date.now(),0,!1))+" Finance Tracker. All rights reserved.",h,h,h,A.a4(h,h,e.G(0.4),h,h,h,h,h,h,h,h,12,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h,h),h,h)],n),B.bc,h,B.k,B.m),h),h,A.aV(0,35e4,0,0)),0.04,h,h,A.aV(0,35e4,0,0)),i.d),B.ji,B.a5),B.a4,!0),h,h,!1,h,h)}}
+if(m==null)m=e}return A.fU(h,A.ji(!0,A.vc(A.xG(h,A.fW(A.dI(A.dg(A.b8(A.b([B.Et,d,B.Eq,s,B.dG,r,B.Es,new A.wJ(o,B.pD,h),new A.dm(B.cy,h,h,p,h),B.dG,q,B.oF,A.b5(A.b([k,new A.ay(B.f4,j,h),A.ce(A.xl(m.G(f?1:0.5),h),1,h)],n),B.p,B.k,B.m,0),B.ev,A.b5(A.b([A.S("Don't have an account? ",h,h,h,A.a4(h,h,e.G(0.6),h,h,h,h,h,h,h,h,14,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h,h),A.ed(h,B.a59,B.P,!1,h,h,h,h,h,h,h,h,h,h,h,h,h,h,h,h,h,new A.aHg(a),h,h,h,h,h,h,!1,B.aD)],n),B.p,B.bW,B.m,0),B.ew,A.dF(A.S("\xa9 "+A.bo(new A.bI(Date.now(),0,!1))+" Coinsight. All rights reserved.",h,h,h,A.a4(h,h,e.G(0.4),h,h,h,h,h,h,h,h,12,h,h,h,h,h,!0,h,h,h,h,h,h,h,h),h,h,h),h,h)],n),B.bc,h,B.k,B.m),h),h,A.aV(0,35e4,0,0)),0.04,h,h,A.aV(0,35e4,0,0)),i.d),B.ji,B.a5),B.a4,!0),h,h,!1,h,h)}}
 A.aH4.prototype={
 $0(){return this.a.w=!0},
 $S:0}
@@ -52378,7 +52378,7 @@ if(n){o=a3.n
 if(o==null)o=a6}o=A.cp(o.G(a2?1:0.5),1)
 n=A.aM(c,B.OD,B.l,c,c,new A.aJ(B.O.G(0.12),c,c,A.ak(10),c,c,B.r),c,40,c,c,c,c,c,40)
 k=A.S("Export to CSV",c,c,c,A.a4(c,c,a6,c,c,c,c,c,c,c,c,c,c,c,B.X,c,c,!0,c,c,c,c,c,c,c,c),c,c,c)
-return A.fU(c,A.aX2(A.b([new A.mj(a4,c),A.aTf(A.aTe(A.b([B.eu,a7,B.eu,r,B.aR,m,B.aR,l,B.aR,A.dI(A.dg(new A.ay(B.bT,A.aM(c,A.pR(!1,c,c,c,!0,c,c,c,!0,c,n,c,c,c,c,d.gahx(),!1,c,c,c,c,c,A.S("Download your transaction history",c,c,c,A.a4(c,c,a6.G(0.6),c,c,c,c,c,c,c,c,12,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c,c),c,k,A.bR(B.tC,a6.G(0.4),c,c),c),B.l,c,c,new A.aJ(s,c,o,p,q,c,B.r),c,c,c,c,c,c,c,c),c),c),A.aV(0,38e4,0,0),A.aV(0,b,0,0)),B.ct,A.dI(A.dg(new A.ay(B.bT,A.aZ2(B.O7,B.a4R,d.gasK(),A.apG(c,c,c,c,c,c,c,c,c,c,c,B.ZF,B.mx,c,c,B.iG,c,c,c,c)),c),c),A.aV(0,42e4,0,0),A.aV(0,b,0,0)),B.ct,A.dI(A.dg(A.dF(A.S("\xa9 "+A.bo(new A.bI(Date.now(),0,!1))+" Finance Tracker. All rights reserved.",c,c,c,A.a4(c,c,a6.G(0.4),c,c,c,c,c,c,c,c,12,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c,c),c,c),c),A.aV(0,46e4,0,0),A.aV(0,b,0,0)),B.oG],a5),!0,!0,!0))],a5)),c,c,!1,c,c)}}
+return A.fU(c,A.aX2(A.b([new A.mj(a4,c),A.aTf(A.aTe(A.b([B.eu,a7,B.eu,r,B.aR,m,B.aR,l,B.aR,A.dI(A.dg(new A.ay(B.bT,A.aM(c,A.pR(!1,c,c,c,!0,c,c,c,!0,c,n,c,c,c,c,d.gahx(),!1,c,c,c,c,c,A.S("Download your transaction history",c,c,c,A.a4(c,c,a6.G(0.6),c,c,c,c,c,c,c,c,12,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c,c),c,k,A.bR(B.tC,a6.G(0.4),c,c),c),B.l,c,c,new A.aJ(s,c,o,p,q,c,B.r),c,c,c,c,c,c,c,c),c),c),A.aV(0,38e4,0,0),A.aV(0,b,0,0)),B.ct,A.dI(A.dg(new A.ay(B.bT,A.aZ2(B.O7,B.a4R,d.gasK(),A.apG(c,c,c,c,c,c,c,c,c,c,c,B.ZF,B.mx,c,c,B.iG,c,c,c,c)),c),c),A.aV(0,42e4,0,0),A.aV(0,b,0,0)),B.ct,A.dI(A.dg(A.dF(A.S("\xa9 "+A.bo(new A.bI(Date.now(),0,!1))+" Coinsight. All rights reserved.",c,c,c,A.a4(c,c,a6.G(0.4),c,c,c,c,c,c,c,c,12,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c,c),c,c),c),A.aV(0,46e4,0,0),A.aV(0,b,0,0)),B.oG],a5),!0,!0,!0))],a5)),c,c,!1,c,c)}}
 A.aJ8.prototype={
 $0(){return this.a.e=!0},
 $S:0}

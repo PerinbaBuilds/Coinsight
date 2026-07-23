@@ -1,5 +1,5 @@
 # Software Design Document
-## Finance Tracker — Personal Budget Management App
+## Coinsight — Personal Budget Management App
 **Version:** 2.0  
 **Date:** July 2026  
 **Author:** Athiban S (PerinbaBuilds)
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-Finance Tracker is a Flutter web application. The architecture follows the **Provider pattern** for state management, with three core services (`AuthService`, `FinanceService`, `AdvisorService`) exposed via `MultiProvider` at the app root. Navigation is driven entirely by auth state events — no manual `Navigator.push` for auth transitions. As of v2.0 an **AI Financial Advisor** feature adds a chat surface backed by a Supabase Edge Function that proxies to a hosted LLM.
+Coinsight is a Flutter web application. The architecture follows the **Provider pattern** for state management, with three core services (`AuthService`, `FinanceService`, `AdvisorService`) exposed via `MultiProvider` at the app root. Navigation is driven entirely by auth state events — no manual `Navigator.push` for auth transitions. As of v2.0 an **AI Financial Advisor** feature adds a chat surface backed by a Supabase Edge Function that proxies to a hosted LLM.
 
 ---
 
@@ -125,7 +125,7 @@ Supabase's PKCE flow sends a `?code=xxx` query param (not the legacy `#type=reco
 ```dart
 redirectTo = '${base}?type=recovery';
 // Supabase appends: &code=xxx
-// Final URL: https://perinbabuilds.github.io/Finance-App/?type=recovery&code=xxx
+// Final URL: https://perinbabuilds.github.io/Coinsight/?type=recovery&code=xxx
 ```
 
 Detection happens before `Supabase.initialize()` so the PKCE exchange (which fires `passwordRecovery`) does not race with the UI showing the wrong screen.
@@ -227,7 +227,7 @@ supabase/functions/financial-advisor/index.ts
 
 | Target | Command | Output | URL |
 |--------|---------|--------|-----|
-| GitHub Pages | `flutter build web --base-href="/Finance-App/" --release --no-tree-shake-icons` then copy `build/web/*` to `docs/` | `docs/` folder | `perinbabuilds.github.io/Finance-App/` |
+| GitHub Pages | `flutter build web --base-href="/Coinsight/" --release --no-tree-shake-icons` then copy `build/web/*` to `docs/` | `docs/` folder | `perinbabuilds.github.io/Coinsight/` |
 | Netlify (paused) | `flutter build web --base-href="/" --release --no-tree-shake-icons` | `build/web/` | — (credits exhausted) |
 
 ### 6.1 Service Worker Caveat
@@ -236,7 +236,7 @@ Flutter web registers a service worker that aggressively caches `main.dart.js`. 
 ### 6.2 Required Supabase Config
 Go to **Authentication → URL Configuration → Redirect URLs** and add:
 ```
-https://perinbabuilds.github.io/Finance-App/**
+https://perinbabuilds.github.io/Coinsight/**
 ```
 Without this, password reset emails will use a disallowed redirect and the reset flow will fail.
 

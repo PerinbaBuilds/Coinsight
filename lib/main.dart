@@ -49,7 +49,7 @@ class FinanceTrackerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<FinanceService>(
       builder: (context, finance, _) => MaterialApp(
-        title: 'Finance Tracker',
+        title: 'Coinsight',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
@@ -178,7 +178,7 @@ class _SplashScreen extends StatelessWidget {
                 .scaleXY(begin: 1.0, end: 1.06, duration: 1100.ms, curve: AppTheme.motionCurve),
             const SizedBox(height: 28),
             Text(
-              'Finance Tracker',
+              'Coinsight',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
