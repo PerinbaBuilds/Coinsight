@@ -15,6 +15,7 @@ class BudgetChart extends StatefulWidget {
 
 class _BudgetChartState extends State<BudgetChart> {
   int _touched = -1;
+  double _rate = 1.0; // USD → active currency, cached each build for _fmt.
 
   List<BudgetCategory> get _cats =>
       widget.categories.where((c) => c.budgetAmount > 0).toList();
@@ -27,7 +28,9 @@ class _BudgetChartState extends State<BudgetChart> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.watch<FinanceService>().currencySymbol;
+    final finance = context.watch<FinanceService>();
+    final cs = finance.currencySymbol;
+    _rate = finance.fxRate;
     final totalSpent = _totalSpent;
     final totalBudget = _totalBudget;
     final overallPct = totalBudget == 0 ? 0.0 : totalSpent / totalBudget * 100;
@@ -344,8 +347,12 @@ class _BudgetChartState extends State<BudgetChart> {
     );
   }
 
-  String _fmt(double v, String cs) =>
-      v >= 1000 ? '$cs${(v / 1000).toStringAsFixed(1)}k' : '$cs${v.toStringAsFixed(0)}';
+  String _fmt(double v, String cs) {
+    final d = v * _rate;
+    return d >= 1000
+        ? '$cs${(d / 1000).toStringAsFixed(1)}k'
+        : '$cs${d.toStringAsFixed(0)}';
+  }
 }
 
 // ── Status pill ───────────────────────────────────────────────────────────────

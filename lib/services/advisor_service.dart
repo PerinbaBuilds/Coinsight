@@ -360,24 +360,24 @@ class AdvisorService extends ChangeNotifier {
       'today': now.toIso8601String().substring(0, 10),
       'day_of_month': now.day,
       'days_in_month': daysInMonth,
-      'monthly_budget': finance.totalMonthlyBudget,
-      'spent_this_month': finance.totalActualSpent,
+      'monthly_budget': finance.toDisplay(finance.totalMonthlyBudget),
+      'spent_this_month': finance.toDisplay(finance.totalActualSpent),
       'budget_used_pct': finance.totalMonthlyBudget == 0
           ? 0
           : (finance.totalActualSpent / finance.totalMonthlyBudget * 100)
               .toStringAsFixed(1),
-      'income_this_month': finance.totalIncome,
-      'net_savings_this_month': finance.netSavings,
-      'projected_month_spend': monthlySpendEstimate.round(),
-      'total_saved_in_goals': goalSavedTotal,
+      'income_this_month': finance.toDisplay(finance.totalIncome),
+      'net_savings_this_month': finance.toDisplay(finance.netSavings),
+      'projected_month_spend': finance.toDisplay(monthlySpendEstimate).round(),
+      'total_saved_in_goals': finance.toDisplay(goalSavedTotal),
       'emergency_buffer_months': double.parse(bufferMonths.toStringAsFixed(1)),
       'health_score': computeHealthScore(finance),
       'categories': [
         for (final c in finance.categories)
           {
             'name': c.name,
-            'budget': c.budgetAmount,
-            'spent': c.actualAmount,
+            'budget': finance.toDisplay(c.budgetAmount),
+            'spent': finance.toDisplay(c.actualAmount),
             'over_budget': c.isOverBudget,
           },
       ],
@@ -385,8 +385,8 @@ class AdvisorService extends ChangeNotifier {
         for (final g in finance.goals)
           {
             'name': g.name,
-            'target': g.targetAmount,
-            'saved': g.currentAmount,
+            'target': finance.toDisplay(g.targetAmount),
+            'saved': finance.toDisplay(g.currentAmount),
             if (g.targetDate != null)
               'target_date': g.targetDate!.toIso8601String().substring(0, 10),
           },
@@ -395,7 +395,7 @@ class AdvisorService extends ChangeNotifier {
         for (final r in finance.recurring.where((r) => r.isActive))
           {
             'description': r.description,
-            'amount': r.amount,
+            'amount': finance.toDisplay(r.amount),
             'day_of_month': r.dayOfMonth,
           },
       ],
@@ -403,10 +403,10 @@ class AdvisorService extends ChangeNotifier {
         for (final m in finance.monthHistory.take(6))
           {
             'month': m.monthKey,
-            'budget': m.totalBudget,
-            'spent': m.totalSpent,
-            'income': m.totalIncome,
-            'net_savings': m.netSavings,
+            'budget': finance.toDisplay(m.totalBudget),
+            'spent': finance.toDisplay(m.totalSpent),
+            'income': finance.toDisplay(m.totalIncome),
+            'net_savings': finance.toDisplay(m.netSavings),
           },
       ],
     };

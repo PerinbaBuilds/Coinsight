@@ -226,7 +226,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '$sym${carry.toStringAsFixed(2)} unspent will carry forward to next month\'s budget.',
+                        '$sym${finance.toDisplay(carry).toStringAsFixed(2)} unspent will carry forward to next month\'s budget.',
                         style: const TextStyle(
                             color: AppTheme.emerald, fontSize: 13),
                       ),
@@ -255,7 +255,7 @@ class DashboardScreen extends StatelessWidget {
       await finance.resetMonth();
       if (context.mounted) {
         final msg = carry > 0
-            ? 'Month reset! $sym${carry.toStringAsFixed(2)} carried forward.'
+            ? 'Month reset! $sym${finance.toDisplay(carry).toStringAsFixed(2)} carried forward.'
             : 'Month reset! Snapshot saved to History.';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -392,7 +392,7 @@ class _DashboardHeader extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '$sym${val.toStringAsFixed(0)}',
+                          '$sym${finance.toDisplay(val).toStringAsFixed(0)}',
                           maxLines: 1,
                           style: const TextStyle(
                             color: Colors.white,
@@ -422,8 +422,8 @@ class _DashboardHeader extends StatelessWidget {
                     ),
                     child: Text(
                       isOver
-                          ? '-$sym${remaining.abs().toStringAsFixed(0)} over'
-                          : '$sym${remaining.toStringAsFixed(0)} left',
+                          ? '-$sym${finance.toDisplay(remaining.abs()).toStringAsFixed(0)} over'
+                          : '$sym${finance.toDisplay(remaining).toStringAsFixed(0)} left',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 13,
@@ -435,7 +435,7 @@ class _DashboardHeader extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'of $sym${finance.totalMonthlyBudget.toStringAsFixed(0)} budget',
+                'of $sym${finance.toDisplay(finance.totalMonthlyBudget).toStringAsFixed(0)} budget',
                 style: const TextStyle(color: Colors.white60, fontSize: 14),
               ),
               const SizedBox(height: 14),
@@ -551,7 +551,7 @@ class _DashboardHeader extends StatelessWidget {
                   Expanded(
                     child: SummaryCard(
                       label: 'Budget',
-                      amount: finance.totalMonthlyBudget,
+                      amount: finance.toDisplay(finance.totalMonthlyBudget),
                       icon: Icons.account_balance_wallet,
                       color: const Color(0xFF15803D),
                       currencySymbol: sym,
@@ -561,7 +561,7 @@ class _DashboardHeader extends StatelessWidget {
                   Expanded(
                     child: SummaryCard(
                       label: 'Spent',
-                      amount: finance.totalActualSpent,
+                      amount: finance.toDisplay(finance.totalActualSpent),
                       icon: Icons.payment,
                       color: isOver
                           ? const Color(0xFFF87171)
@@ -577,7 +577,7 @@ class _DashboardHeader extends StatelessWidget {
                   Expanded(
                     child: SummaryCard(
                       label: 'Income',
-                      amount: finance.totalIncome,
+                      amount: finance.toDisplay(finance.totalIncome),
                       icon: Icons.trending_up,
                       color: const Color(0xFF2DD4BF),
                       currencySymbol: sym,
@@ -587,7 +587,7 @@ class _DashboardHeader extends StatelessWidget {
                   Expanded(
                     child: SummaryCard(
                       label: 'Net Savings',
-                      amount: finance.netSavings,
+                      amount: finance.toDisplay(finance.netSavings),
                       icon: Icons.savings,
                       color: finance.netSavings >= 0
                           ? const Color(0xFF4ADE80)

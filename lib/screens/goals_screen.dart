@@ -173,14 +173,14 @@ class _GoalCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$sym${goal.currentAmount.toStringAsFixed(0)}',
+                    '$sym${finance.toDisplay(goal.currentAmount).toStringAsFixed(0)}',
                     style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.bold,
                         fontSize: 20),
                   ),
                   Text(
-                    'of $sym${goal.targetAmount.toStringAsFixed(0)}',
+                    'of $sym${finance.toDisplay(goal.targetAmount).toStringAsFixed(0)}',
                     style: TextStyle(
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                         fontSize: 13),
@@ -198,7 +198,7 @@ class _GoalCard extends StatelessWidget {
                         fontSize: 18),
                   ),
                   Text(
-                    '$sym${(goal.targetAmount - goal.currentAmount).clamp(0, double.infinity).toStringAsFixed(0)} remaining',
+                    '$sym${finance.toDisplay((goal.targetAmount - goal.currentAmount).clamp(0, double.infinity).toDouble()).toStringAsFixed(0)} remaining',
                     style: TextStyle(
                         color: colorScheme.onSurface.withValues(alpha: 0.4),
                         fontSize: 12),
@@ -253,10 +253,10 @@ class _GoalCard extends StatelessWidget {
           controller: ctrl,
           keyboardType:
               const TextInputType.numberWithOptions(decimal: true),
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
               labelText: 'Amount',
-              prefixText: '\$ ',
-              prefixIcon: Icon(Icons.attach_money)),
+              prefixText: '${finance.currencySymbol} ',
+              prefixIcon: const Icon(Icons.attach_money)),
           autofocus: true,
         ),
         actions: [
@@ -267,7 +267,7 @@ class _GoalCard extends StatelessWidget {
             onPressed: () async {
               final val = double.tryParse(ctrl.text);
               if (val != null && val > 0) {
-                await finance.addToGoal(goal.id, val);
+                await finance.addToGoal(goal.id, finance.toBase(val));
                 if (context.mounted) Navigator.pop(context);
               }
             },
@@ -348,7 +348,7 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
     final goal = SavingsGoal(
       id: widget.finance.generateId(),
       name: _nameCtrl.text.trim(),
-      targetAmount: double.parse(_targetCtrl.text),
+      targetAmount: widget.finance.toBase(double.parse(_targetCtrl.text)),
       targetDate: _targetDate,
     );
     await widget.finance.addGoal(goal);
@@ -377,10 +377,10 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
               controller: _targetCtrl,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   labelText: 'Target Amount',
-                  prefixText: '\$ ',
-                  prefixIcon: Icon(Icons.attach_money)),
+                  prefixText: '${widget.finance.currencySymbol} ',
+                  prefixIcon: const Icon(Icons.attach_money)),
               validator: (v) {
                 final p = double.tryParse(v ?? '');
                 return (p == null || p <= 0)

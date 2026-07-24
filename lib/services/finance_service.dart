@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../models/category.dart';
@@ -15,6 +18,24 @@ class FinanceService extends ChangeNotifier {
   bool _isLoading = false;
   bool _isDarkMode = false;
   String _currency = 'USD';
+
+  // Exchange rates: 1 USD == _rates[code] units of that currency. All amounts
+  // are stored in USD; these are only used to convert for display and to
+  // convert user-entered values back to USD. Seeded with sensible fallbacks so
+  // conversion works offline, then refreshed from a live feed on startup.
+  Map<String, double> _rates = const {
+    'USD': 1.0,
+    'EUR': 0.92,
+    'GBP': 0.79,
+    'INR': 85.0,
+    'JPY': 157.0,
+    'CAD': 1.37,
+  };
+
+  FinanceService() {
+    _restoreLocalPrefs();
+    _refreshRates();
+  }
 
   List<BudgetCategory> _categories = [];
   List<Transaction> _transactions = [];
@@ -39,6 +60,26 @@ class FinanceService extends ChangeNotifier {
   };
 
   String get currencySymbol => availableCurrencies[_currency] ?? '\$';
+
+  // 1 USD expressed in the active currency. Amounts are stored in USD.
+  double get fxRate => _rates[_currency] ?? 1.0;
+  // USD → active currency (for display).
+  double toDisplay(double usd) => usd * fxRate;
+  // active currency → USD (for values the user typed in).
+  double toBase(double amount) => fxRate == 0 ? amount : amount / fxRate;
+
+  // Formats a USD amount in the active currency: symbol + converted value.
+  String money(double usd,
+      {int decimals = 2, bool compact = false, bool signed = false}) {
+    final v = usd * fxRate;
+    final abs = v.abs();
+    final sign = v < 0 ? '-' : (signed ? '+' : '');
+    if (compact && abs >= 1000) {
+      return '$sign$currencySymbol${(abs / 1000).toStringAsFixed(1)}k';
+    }
+    return '$sign$currencySymbol${abs.toStringAsFixed(decimals)}';
+  }
+
   List<BudgetCategory> get categories => List.unmodifiable(_categories);
   List<Transaction> get transactions => List.unmodifiable(_transactions);
   List<Income> get incomes => List.unmodifiable(_incomes);
@@ -128,8 +169,16 @@ class FinanceService extends ChangeNotifier {
     if (res != null) {
       _totalMonthlyBudget =
           (res['total_monthly_budget'] as num? ?? 5000).toDouble();
-      _isDarkMode = res['is_dark_mode'] ?? false;
-      _currency = res['currency'] as String? ?? 'USD';
+      final serverDark = res['is_dark_mode'];
+      if (serverDark is bool) _isDarkMode = serverDark;
+      // Only adopt the server currency when it's actually present, so a missing
+      // column or an unsynced row can't clobber the locally-cached choice.
+      final serverCurrency = res['currency'] as String?;
+      if (serverCurrency != null &&
+          availableCurrencies.containsKey(serverCurrency)) {
+        _currency = serverCurrency;
+      }
+      await _saveLocalPrefs();
     }
   }
 
@@ -448,6 +497,7 @@ class FinanceService extends ChangeNotifier {
   Future<void> toggleDarkMode() async {
     _isDarkMode = !_isDarkMode;
     notifyListeners();
+    await _saveLocalPrefs();
     try {
       await _saveSettings();
     } catch (e) {
@@ -459,10 +509,73 @@ class FinanceService extends ChangeNotifier {
     if (!availableCurrencies.containsKey(code)) return;
     _currency = code;
     notifyListeners();
+    await _saveLocalPrefs();
     try {
       await _saveSettings();
     } catch (e) {
       debugPrint('Failed to save currency: $e');
+    }
+  }
+
+  // ── Local persistence & live FX rates ─────────────────────────────────────
+
+  Future<void> _restoreLocalPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var changed = false;
+      final c = prefs.getString('currency');
+      if (c != null && availableCurrencies.containsKey(c)) {
+        _currency = c;
+        changed = true;
+      }
+      final d = prefs.getBool('is_dark_mode');
+      if (d != null) {
+        _isDarkMode = d;
+        changed = true;
+      }
+      final r = prefs.getString('fx_rates');
+      if (r != null) {
+        final decoded = (jsonDecode(r) as Map)
+            .map((k, v) => MapEntry(k as String, (v as num).toDouble()));
+        if (decoded.isNotEmpty) {
+          _rates = {..._rates, ...decoded};
+          changed = true;
+        }
+      }
+      if (changed) notifyListeners();
+    } catch (_) {
+      // First run or storage unavailable — fall back to defaults.
+    }
+  }
+
+  Future<void> _saveLocalPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('currency', _currency);
+      await prefs.setBool('is_dark_mode', _isDarkMode);
+    } catch (_) {}
+  }
+
+  Future<void> _refreshRates() async {
+    try {
+      final symbols =
+          availableCurrencies.keys.where((c) => c != 'USD').join(',');
+      final uri =
+          Uri.parse('https://api.frankfurter.app/latest?from=USD&to=$symbols');
+      final resp = await http.get(uri).timeout(const Duration(seconds: 8));
+      if (resp.statusCode != 200) return;
+      final body = jsonDecode(resp.body) as Map<String, dynamic>;
+      final rates = (body['rates'] as Map?)
+          ?.map((k, v) => MapEntry(k as String, (v as num).toDouble()));
+      if (rates == null || rates.isEmpty) return;
+      _rates = {'USD': 1.0, ...rates};
+      notifyListeners();
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('fx_rates', jsonEncode(_rates));
+      } catch (_) {}
+    } catch (_) {
+      // Offline or feed down — keep the fallback/cached rates.
     }
   }
 

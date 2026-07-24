@@ -146,7 +146,9 @@ class _TotalBudgetCardState extends State<_TotalBudgetCard> {
   void initState() {
     super.initState();
     _ctrl = TextEditingController(
-        text: widget.finance.totalMonthlyBudget.toStringAsFixed(2));
+        text: widget.finance
+            .toDisplay(widget.finance.totalMonthlyBudget)
+            .toStringAsFixed(2));
   }
 
   @override
@@ -185,7 +187,7 @@ class _TotalBudgetCardState extends State<_TotalBudgetCard> {
                           autofocus: true,
                         )
                       : Text(
-                          '\$ ${widget.finance.totalMonthlyBudget.toStringAsFixed(2)}',
+                          '${widget.finance.currencySymbol} ${widget.finance.toDisplay(widget.finance.totalMonthlyBudget).toStringAsFixed(2)}',
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -198,7 +200,8 @@ class _TotalBudgetCardState extends State<_TotalBudgetCard> {
                     onPressed: () async {
                       final val = double.tryParse(_ctrl.text);
                       if (val != null && val > 0) {
-                        await widget.finance.updateTotalBudget(val);
+                        await widget.finance
+                            .updateTotalBudget(widget.finance.toBase(val));
                         setState(() => _editing = false);
                       }
                     },
@@ -242,6 +245,7 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final finance = context.watch<FinanceService>();
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -252,7 +256,7 @@ class _CategoryTile extends StatelessWidget {
         title: Text(category.name,
             style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text(
-            'Budget: \$${category.budgetAmount.toStringAsFixed(2)} | Spent: \$${category.actualAmount.toStringAsFixed(2)}'),
+            'Budget: ${finance.currencySymbol}${finance.toDisplay(category.budgetAmount).toStringAsFixed(2)} | Spent: ${finance.currencySymbol}${finance.toDisplay(category.actualAmount).toStringAsFixed(2)}'),
         trailing: isLocked
             ? const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -319,7 +323,11 @@ class _CategoryDialogState extends State<_CategoryDialog> {
     _nameCtrl =
         TextEditingController(text: widget.category?.name ?? '');
     _budgetCtrl = TextEditingController(
-        text: widget.category?.budgetAmount.toStringAsFixed(2) ?? '');
+        text: widget.category != null
+            ? widget.finance
+                .toDisplay(widget.category!.budgetAmount)
+                .toStringAsFixed(2)
+            : '');
     _selectedIcon = widget.category?.icon ?? Icons.category;
     _selectedColor = widget.category?.color ?? const Color(0xFF22C55E);
   }
@@ -338,7 +346,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
     if (widget.category != null) {
       widget.category!
         ..name = _nameCtrl.text.trim()
-        ..budgetAmount = double.parse(_budgetCtrl.text)
+        ..budgetAmount = finance.toBase(double.parse(_budgetCtrl.text))
         ..icon = _selectedIcon
         ..color = _selectedColor;
       await finance.updateCategory(widget.category!);
@@ -346,7 +354,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
       await finance.addCategory(BudgetCategory(
         id: finance.generateId(),
         name: _nameCtrl.text.trim(),
-        budgetAmount: double.parse(_budgetCtrl.text),
+        budgetAmount: finance.toBase(double.parse(_budgetCtrl.text)),
         icon: _selectedIcon,
         color: _selectedColor,
       ));
@@ -380,10 +388,10 @@ class _CategoryDialogState extends State<_CategoryDialog> {
                 controller: _budgetCtrl,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                    labelText: 'Budget Amount (\$)',
-                    prefixText: '\$ ',
-                    border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: 'Budget Amount (${widget.finance.currencySymbol})',
+                    prefixText: '${widget.finance.currencySymbol} ',
+                    border: const OutlineInputBorder()),
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Enter amount';
                   final p = double.tryParse(v);

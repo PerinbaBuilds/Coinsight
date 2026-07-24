@@ -499,8 +499,8 @@ class _DismissibleTile extends StatelessWidget {
           trailing: Consumer<FinanceService>(
             builder: (_, finance, __) => Text(
               entry.isExpense
-                  ? '-${finance.currencySymbol}${entry.amount.toStringAsFixed(2)}'
-                  : '+${finance.currencySymbol}${entry.amount.toStringAsFixed(2)}',
+                  ? '-${finance.currencySymbol}${finance.toDisplay(entry.amount).toStringAsFixed(2)}'
+                  : '+${finance.currencySymbol}${finance.toDisplay(entry.amount).toStringAsFixed(2)}',
               style: TextStyle(
                 color: entry.isExpense ? AppTheme.rose : AppTheme.emerald,
                 fontWeight: FontWeight.bold,
