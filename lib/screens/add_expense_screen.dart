@@ -58,7 +58,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         id: finance.generateId(),
         categoryId: _selectedCategoryId!,
         description: _descController.text.trim(),
-        amount: double.parse(_amountController.text),
+        amount: finance.toBase(double.parse(_amountController.text)),
         date: _selectedDate,
       );
       await finance.addTransaction(tx);
@@ -251,15 +251,15 @@ class _BudgetPreview extends StatelessWidget {
                         color: colorScheme.onSurface)),
                 Text(
                   isOver
-                      ? 'Over budget by $sym${remaining.abs().toStringAsFixed(2)}'
-                      : '$sym${remaining.toStringAsFixed(2)} remaining',
+                      ? 'Over budget by $sym${finance.toDisplay(remaining.abs()).toStringAsFixed(2)}'
+                      : '$sym${finance.toDisplay(remaining).toStringAsFixed(2)} remaining',
                   style: TextStyle(color: accentColor, fontSize: 12),
                 ),
               ],
             ),
           ),
           Text(
-            '$sym${cat.actualAmount.toStringAsFixed(2)} / $sym${cat.budgetAmount.toStringAsFixed(2)}',
+            '$sym${finance.toDisplay(cat.actualAmount).toStringAsFixed(2)} / $sym${finance.toDisplay(cat.budgetAmount).toStringAsFixed(2)}',
             style: TextStyle(
                 fontSize: 12,
                 color: colorScheme.onSurface.withValues(alpha: 0.6)),

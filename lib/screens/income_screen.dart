@@ -93,7 +93,7 @@ class IncomeScreen extends StatelessWidget {
                         duration: const Duration(milliseconds: 1000),
                         curve: AppTheme.motionCurve,
                         builder: (_, val, __) => Text(
-                          '${finance.currencySymbol}${val.toStringAsFixed(0)}',
+                          '${finance.currencySymbol}${finance.toDisplay(val).toStringAsFixed(0)}',
                           style: const TextStyle(
                             color: AppTheme.emerald,
                             fontSize: 32,
@@ -214,7 +214,7 @@ class _IncomeCard extends StatelessWidget {
                 color: colorScheme.onSurface.withValues(alpha: 0.6)),
           ),
           trailing: Text(
-            '+${finance.currencySymbol}${income.amount.toStringAsFixed(2)}',
+            '+${finance.currencySymbol}${finance.toDisplay(income.amount).toStringAsFixed(2)}',
             style: const TextStyle(
               color: AppTheme.emerald,
               fontWeight: FontWeight.bold,
@@ -296,7 +296,7 @@ class _AddIncomeDialogState extends State<_AddIncomeDialog> {
     final income = Income(
       id: widget.finance.generateId(),
       source: _sourceCtrl.text.trim(),
-      amount: double.parse(_amountCtrl.text),
+      amount: widget.finance.toBase(double.parse(_amountCtrl.text)),
       date: _date,
     );
     await widget.finance.addIncome(income);

@@ -62,7 +62,8 @@ class _HistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final cs = context.watch<FinanceService>().currencySymbol;
+    final finance = context.watch<FinanceService>();
+    final cs = finance.currencySymbol;
     final isGood = snap.netSavings >= 0;
     final spentPct = snap.totalBudget == 0
         ? 0.0
@@ -111,7 +112,7 @@ class _HistoryCard extends StatelessWidget {
         subtitle: Row(
           children: [
             Text(
-              'Net: ${isGood ? '+' : ''}$cs${snap.netSavings.toStringAsFixed(0)}',
+              'Net: ${isGood ? '+' : ''}$cs${finance.toDisplay(snap.netSavings).toStringAsFixed(0)}',
               style: TextStyle(
                 color: isGood ? AppTheme.emerald : AppTheme.rose,
                 fontWeight: FontWeight.w600,
@@ -147,12 +148,12 @@ class _HistoryCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 // Summary row
-                _SummaryRow('Budget', '$cs${snap.totalBudget.toStringAsFixed(0)}', scheme.onSurface.withValues(alpha: 0.8)),
-                _SummaryRow('Spent', '$cs${snap.totalSpent.toStringAsFixed(0)}', isGood ? AppTheme.emerald : AppTheme.rose),
-                _SummaryRow('Income', '$cs${snap.totalIncome.toStringAsFixed(0)}', AppTheme.sky),
+                _SummaryRow('Budget', '$cs${finance.toDisplay(snap.totalBudget).toStringAsFixed(0)}', scheme.onSurface.withValues(alpha: 0.8)),
+                _SummaryRow('Spent', '$cs${finance.toDisplay(snap.totalSpent).toStringAsFixed(0)}', isGood ? AppTheme.emerald : AppTheme.rose),
+                _SummaryRow('Income', '$cs${finance.toDisplay(snap.totalIncome).toStringAsFixed(0)}', AppTheme.sky),
                 _SummaryRow(
                   'Variance',
-                  '${snap.variance >= 0 ? '+' : ''}$cs${snap.variance.toStringAsFixed(0)}',
+                  '${snap.variance >= 0 ? '+' : ''}$cs${finance.toDisplay(snap.variance).toStringAsFixed(0)}',
                   snap.variance >= 0 ? AppTheme.emerald : AppTheme.rose,
                 ),
                 // Category breakdown
@@ -192,7 +193,7 @@ class _HistoryCard extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    '$cs${e.value.toStringAsFixed(0)}',
+                                    '$cs${finance.toDisplay(e.value).toStringAsFixed(0)}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: isOver ? AppTheme.rose : scheme.onSurface,
@@ -201,7 +202,7 @@ class _HistoryCard extends StatelessWidget {
                                   ),
                                   if (budget != null) ...[
                                     Text(
-                                      ' / $cs${budget.toStringAsFixed(0)}',
+                                      ' / $cs${finance.toDisplay(budget).toStringAsFixed(0)}',
                                       style: TextStyle(
                                         color: scheme.onSurface.withValues(alpha: 0.45),
                                         fontSize: 11,
@@ -273,7 +274,7 @@ class _HistoryCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '$cs${(tx['amount'] as num?)?.toStringAsFixed(0) ?? '0'}',
+                              '$cs${finance.toDisplay(((tx['amount'] as num?) ?? 0).toDouble()).toStringAsFixed(0)}',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,

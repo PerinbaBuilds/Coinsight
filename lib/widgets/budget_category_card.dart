@@ -30,7 +30,8 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
     final cat = widget.category;
     final txns = widget.transactions;
     final isOver = cat.isOverBudget;
-    final sym = context.watch<FinanceService>().currencySymbol;
+    final finance = context.watch<FinanceService>();
+    final sym = finance.currencySymbol;
     final statusColor =
         AppTheme.budgetStatusColor(cat.utilizationPercent, cat.isOverBudget);
     final scheme = Theme.of(context).colorScheme;
@@ -120,7 +121,7 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        'Budget: $sym${cat.budgetAmount.toStringAsFixed(0)}',
+                                        'Budget: $sym${finance.toDisplay(cat.budgetAmount).toStringAsFixed(0)}',
                                         style: TextStyle(
                                           color: scheme.onSurface.withValues(alpha: 0.55),
                                           fontSize: 12,
@@ -154,7 +155,7 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    '$sym${cat.actualAmount.toStringAsFixed(0)}',
+                                    '$sym${finance.toDisplay(cat.actualAmount).toStringAsFixed(0)}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -173,8 +174,8 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
                                     ),
                                     child: Text(
                                       isOver
-                                          ? '-$sym${cat.variance.abs().toStringAsFixed(0)}'
-                                          : '+$sym${cat.variance.toStringAsFixed(0)}',
+                                          ? '-$sym${finance.toDisplay(cat.variance.abs()).toStringAsFixed(0)}'
+                                          : '+$sym${finance.toDisplay(cat.variance).toStringAsFixed(0)}',
                                       style: TextStyle(
                                         color: statusColor,
                                         fontSize: 11,
@@ -296,9 +297,10 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
   }
 
   void _editBudget(BuildContext context, BudgetCategory cat) {
-    final ctrl =
-        TextEditingController(text: cat.budgetAmount.toStringAsFixed(2));
-    final sym = context.read<FinanceService>().currencySymbol;
+    final finance = context.read<FinanceService>();
+    final ctrl = TextEditingController(
+        text: finance.toDisplay(cat.budgetAmount).toStringAsFixed(2));
+    final sym = finance.currencySymbol;
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -321,8 +323,8 @@ class _BudgetCategoryCardState extends State<BudgetCategoryCard> {
             onPressed: () async {
               final val = double.tryParse(ctrl.text);
               if (val != null && val >= 0) {
-                cat.budgetAmount = val;
-                await context.read<FinanceService>().updateCategory(cat);
+                cat.budgetAmount = finance.toBase(val);
+                await finance.updateCategory(cat);
                 if (context.mounted) Navigator.pop(context);
               }
             },
@@ -416,7 +418,8 @@ class _TransactionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sym = context.watch<FinanceService>().currencySymbol;
+    final finance = context.watch<FinanceService>();
+    final sym = finance.currencySymbol;
     final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.fromLTRB(14, 0, 8, 0),
@@ -446,7 +449,7 @@ class _TransactionRow extends StatelessWidget {
             ),
           ),
           Text(
-            '$sym${tx.amount.toStringAsFixed(2)}',
+            '$sym${finance.toDisplay(tx.amount).toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,

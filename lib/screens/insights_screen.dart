@@ -113,7 +113,7 @@ class InsightsScreen extends StatelessWidget {
         color: AppTheme.rose,
         title: '${cat.name} Over Budget',
         message:
-            'You\'ve exceeded your ${cat.name} budget by $sym${(-cat.variance).toStringAsFixed(2)}.',
+            'You\'ve exceeded your ${cat.name} budget by $sym${finance.toDisplay(-cat.variance).toStringAsFixed(2)}.',
       ));
     }
 
@@ -123,7 +123,7 @@ class InsightsScreen extends StatelessWidget {
         color: AppTheme.emerald,
         title: 'Great Savings!',
         message:
-            'You\'re saving $sym${finance.netSavings.toStringAsFixed(2)} this month. Keep it up!',
+            'You\'re saving $sym${finance.toDisplay(finance.netSavings).toStringAsFixed(2)} this month. Keep it up!',
       ));
     }
 
@@ -144,7 +144,7 @@ class InsightsScreen extends StatelessWidget {
         color: AppTheme.amber,
         title: 'Biggest Spend',
         message:
-            '${cats.first.name} is your top expense at $sym${cats.first.actualAmount.toStringAsFixed(2)}.',
+            '${cats.first.name} is your top expense at $sym${finance.toDisplay(cats.first.actualAmount).toStringAsFixed(2)}.',
       ));
     }
 
@@ -157,7 +157,7 @@ class InsightsScreen extends StatelessWidget {
         color: Colors.purple,
         title: 'Recurring Bills',
         message:
-            'You have $sym${total.toStringAsFixed(2)}/month in recurring expenses.',
+            'You have $sym${finance.toDisplay(total).toStringAsFixed(2)}/month in recurring expenses.',
       ));
     }
 
@@ -608,7 +608,8 @@ class _CategoryBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ratio = max == 0 ? 0.0 : (cat.actualAmount / max).clamp(0.0, 1.0);
-    final sym = context.watch<FinanceService>().currencySymbol;
+    final finance = context.watch<FinanceService>();
+    final sym = finance.currencySymbol;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -628,7 +629,7 @@ class _CategoryBar extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         color: colorScheme.onSurface)),
               ]),
-              Text('$sym${cat.actualAmount.toStringAsFixed(0)}',
+              Text('$sym${finance.toDisplay(cat.actualAmount).toStringAsFixed(0)}',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface)),
@@ -832,8 +833,8 @@ class _SpendingForecast extends StatelessWidget {
               Expanded(
                 child: Text(
                   isProjectedOver
-                      ? 'On track to exceed budget by $sym${projectedVariance.abs().toStringAsFixed(2)}'
-                      : 'On track to stay $sym${projectedVariance.toStringAsFixed(2)} under budget',
+                      ? 'On track to exceed budget by $sym${finance.toDisplay(projectedVariance.abs()).toStringAsFixed(2)}'
+                      : 'On track to stay $sym${finance.toDisplay(projectedVariance).toStringAsFixed(2)} under budget',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: isProjectedOver
@@ -845,12 +846,12 @@ class _SpendingForecast extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _ForecastRow('Daily spending rate',
-              '$sym${dailyRate.toStringAsFixed(2)}/day'),
+              '$sym${finance.toDisplay(dailyRate).toStringAsFixed(2)}/day'),
           _ForecastRow('Days remaining', '$daysLeft days'),
           _ForecastRow('Projected month total',
-              '$sym${projected.toStringAsFixed(2)}'),
+              '$sym${finance.toDisplay(projected).toStringAsFixed(2)}'),
           _ForecastRow('Monthly budget',
-              '$sym${budget.toStringAsFixed(2)}'),
+              '$sym${finance.toDisplay(budget).toStringAsFixed(2)}'),
         ],
       ),
     );

@@ -251,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _StatCard(
                       label: 'Monthly Budget',
                       value:
-                          '$sym${finance.totalMonthlyBudget.toStringAsFixed(0)}',
+                          '$sym${finance.toDisplay(finance.totalMonthlyBudget).toStringAsFixed(0)}',
                       icon: Icons.account_balance_wallet_outlined,
                       color: AppTheme.primary,
                       wide: true,
