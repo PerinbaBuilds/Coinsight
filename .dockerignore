@@ -1,0 +1,13 @@
+# Keep the build context small and reproducible.
+.git
+.github
+.dart_tool
+build
+docs
+test
+.env
+.idea
+.vscode
+*.iml
+.DS_Store
+Thumbs.db
