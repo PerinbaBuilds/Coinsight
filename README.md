@@ -1,4 +1,4 @@
-# Coinsight
+# Coinsight&nbsp;&nbsp;[![CI](https://img.shields.io/github/actions/workflow/status/PerinbaBuilds/Coinsight/deploy.yml?branch=main&logo=githubactions&logoColor=white&label=CI&labelColor=0D1117)](https://github.com/PerinbaBuilds/Coinsight/actions/workflows/deploy.yml)
 
 A personal finance tracker that turns your budgets, spending, and goals into a live financial-health picture — and an in-app advisor that answers real money decisions from *your* numbers, not generic tips.
 
