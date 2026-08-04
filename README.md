@@ -38,6 +38,8 @@ Most budgeting apps stop at "here's what you spent." I wanted one that could act
 
 ## Architecture
 
+> Full detail — data model, runtime flows, and design tradeoffs — in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
 ```
 Flutter web/mobile client
   ├── Provider (AuthService · FinanceService · AdvisorService)
