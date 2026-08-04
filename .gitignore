@@ -34,3 +34,7 @@ web/flutter_bootstrap.js
 # OS
 .DS_Store
 Thumbs.db
+
+# Local environment — real values stay out of git; commit .env.example only
+.env
+!.env.example
