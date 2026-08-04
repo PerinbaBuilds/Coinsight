@@ -16,9 +16,11 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment; newer pushes cancel in-progress runs.
+# Scope concurrency per ref so a push to main can't cancel an in-flight PR
+# build (they previously shared one global "pages" group, which showed cancelled
+# PR checks as red X). Newer runs on the SAME ref still supersede older ones.
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
