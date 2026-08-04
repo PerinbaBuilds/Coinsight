@@ -15,6 +15,18 @@ A personal finance tracker that turns your budgets, spending, and goals into a l
 
 Most budgeting apps stop at "here's what you spent." I wanted one that could actually answer *"can I afford this right now?"* using my own budgets, income, and goals — and I was curious whether an LLM could give grounded, numbers-first advice instead of hand-wavy tips. Coinsight is the result: a clean tracker with an advisor that reasons over a live snapshot of your finances.
 
+## How It Works
+
+1. **Sign in** with email/password. Auth is handled by Supabase, and every row is isolated per account by Row Level Security — you only ever see your own data.
+2. **Set up your month** — a total monthly budget split into categories, plus your income sources.
+3. **Log as you go** — add expenses against categories. The dashboard recomputes spending, remaining budget, net savings, and a financial-health score in real time, with donut/bar charts and forecasts.
+4. **Roll over** — at month end a snapshot is archived (with carry-forward balances) into History, and budgets lock after the 7th so the plan stays honest.
+5. **Ask the advisor** — pose a real decision like *"can I buy this now?"*. Coinsight builds a live snapshot of your finances and sends it — JWT-protected — to a Groq LLM through a Supabase Edge Function (so the model key never touches the client). It replies with a **GO / WAIT / NOT ADVISED** impact report grounded in your actual numbers.
+
+Under the hood, all amounts are stored in a single base currency (USD) and converted to your selected currency for display using live FX rates.
+
+> Full architecture, data model, and sequence diagrams: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
 ## Features
 
 - Set monthly budgets per category and watch actual-vs-planned spending in real time
