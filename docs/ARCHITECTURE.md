@@ -201,7 +201,7 @@ sequenceDiagram
     G-->>EF: reply (prose + optional impact report)
     EF-->>AS: reply
     AS->>AS: parse into prose + Impact Report (GO/WAIT/NOT ADVISED, before→after, 6-mo projection)
-    AS-->>U: render; persist conversation per user
+    AS-->>U: render, persist conversation per user
 ```
 
 The snapshot is sent in the **active display currency** so the model reasons in
