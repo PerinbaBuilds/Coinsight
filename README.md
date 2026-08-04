@@ -4,10 +4,12 @@ A personal finance tracker that turns your budgets, spending, and goals into a l
 
 **Live app:** https://perinbabuilds.github.io/Coinsight/
 
-[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat&logo=dart&logoColor=white)](https://dart.dev)
-[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com)
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?style=flat&logo=github&logoColor=white)](https://pages.github.com)
+[![Flutter](https://img.shields.io/badge/Flutter-0D1117?style=for-the-badge&logo=flutter&logoColor=54C5F8)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-0D1117?style=for-the-badge&logo=dart&logoColor=0175C2)](https://dart.dev)
+[![Supabase](https://img.shields.io/badge/Supabase-0D1117?style=for-the-badge&logo=supabase&logoColor=3FCF8E)](https://supabase.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-0D1117?style=for-the-badge&logo=postgresql&logoColor=4169E1)](https://www.postgresql.org)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-0D1117?style=for-the-badge&logo=githubactions&logoColor=2088FF)](https://github.com/features/actions)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-0D1117?style=for-the-badge&logo=github&logoColor=FFFFFF)](https://pages.github.com)
 
 ## Why this exists
 
@@ -89,6 +91,24 @@ flutter build web --release --no-tree-shake-icons \
 ```
 
 Pushing to `main` builds and deploys this automatically via GitHub Actions — see [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+### Run with Docker
+
+No local Flutter toolchain needed — the multi-stage [`Dockerfile`](Dockerfile) builds the web bundle and serves it with nginx:
+
+```bash
+docker build -t coinsight .
+docker run --rm -p 8080:80 coinsight
+# open http://localhost:8080
+```
+
+To point the container at your own Supabase project, pass build args (falls back to the public demo backend if omitted):
+
+```bash
+docker build -t coinsight \
+  --build-arg SUPABASE_URL=https://your-project.supabase.co \
+  --build-arg SUPABASE_ANON_KEY=your-anon-public-key .
+```
 
 ## Usage
 
