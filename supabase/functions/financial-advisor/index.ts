@@ -16,7 +16,7 @@ const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 // Keep this pointed at a current model from https://console.groq.com/docs/models,
 // and allow overriding it via the GROQ_MODEL secret so future model changes are
 // a one-line secret update, not a code change + redeploy.
-const MODEL = Deno.env.get("GROQ_MODEL") ?? "llama-3.1-8b-instant";
+const MODEL = Deno.env.get("GROQ_MODEL") ?? "openai/gpt-oss-120b";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
