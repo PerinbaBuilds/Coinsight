@@ -12,7 +12,11 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.3-70b-versatile";
+// Groq retires models periodically (a stale id fails with model_not_found).
+// Keep this pointed at a current model from https://console.groq.com/docs/models,
+// and allow overriding it via the GROQ_MODEL secret so future model changes are
+// a one-line secret update, not a code change + redeploy.
+const MODEL = Deno.env.get("GROQ_MODEL") ?? "llama-3.1-8b-instant";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
