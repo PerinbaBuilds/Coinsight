@@ -304,13 +304,43 @@ class AdvisorService extends ChangeNotifier {
         throw (data?['error'] as String?) ?? 'Empty response from advisor';
       }
       _messages.add(_parseAssistantMessage(raw));
+    } on FunctionException catch (e) {
+      debugPrint('[advisor] function error ${e.status}: ${e.details}');
+      _error = _functionError(e);
     } catch (e) {
+      debugPrint('[advisor] error: $e');
       _error = _friendlyError(e);
     } finally {
       _isThinking = false;
       _persist();
       notifyListeners();
     }
+  }
+
+  // The Edge Function replies with { error, detail } on failure. Map the
+  // status + backend message to a specific, actionable message so setup/quota
+  // problems are diagnosable instead of a blanket "could not reach" one.
+  String _functionError(FunctionException e) {
+    final details = e.details;
+    final backend = details is Map
+        ? (details['error'] ?? details['detail'] ?? '').toString()
+        : (details?.toString() ?? '');
+    final lower = backend.toLowerCase();
+
+    if (e.status == 401) {
+      return 'Your session expired — sign out and back in, then try again.';
+    }
+    if (e.status == 404) {
+      return 'The advisor service isn\'t deployed. Deploy the "financial-advisor" '
+          'edge function (see the README → AI Advisor setup).';
+    }
+    if (e.status == 429 || lower.contains('rate')) {
+      return 'The advisor is busy right now (rate limited). Try again in a minute.';
+    }
+    if (lower.contains('groq_api_key')) {
+      return 'The advisor backend isn\'t configured — set the GROQ_API_KEY secret in Supabase.';
+    }
+    return 'Could not reach the advisor. Check your connection and try again.';
   }
 
   String _friendlyError(Object e) {
